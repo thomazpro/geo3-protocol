@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity 0.8.24;
 
 /* -------------------------------------------------------------------------- */
 /*                             OpenZeppelin Imports                           */
@@ -10,7 +10,7 @@ import {Pausable}               from "@openzeppelin/contracts/utils/Pausable.sol
 import {MerkleProof}            from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 /* -------------------------------------------------------------------------- */
-/*                       GEO³ – GeoDataRegistry (SuperRoot)                   */
+/*                       GEO3 – GeoDataRegistry (SuperRoot)                   */
 /* -------------------------------------------------------------------------- */
 /// @title GeoDataRegistrySuperRoot
 /// @notice Versão compacta: armazena **uma única Merkle root por epoch**.

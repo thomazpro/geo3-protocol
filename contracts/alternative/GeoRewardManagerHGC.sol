@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity 0.8.24;
 
 /* -------------------------------------------------------------------------- */
 /*                               External Interfaces                          */
@@ -11,8 +11,10 @@ interface IGeoToken {
 }
 
 interface INodeDIDRegistry {
-    function getController(address node) external view returns (address);
-    function isActive(address node) external view returns (bool);
+    function getControllerAndStatus(address node)
+        external
+        view
+        returns (address controller, bool active);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -23,7 +25,7 @@ import {MerkleProof}     from "@openzeppelin/contracts/utils/cryptography/Merkle
 import {BitMaps}         from "@openzeppelin/contracts/utils/structs/BitMaps.sol";
 
 /* -------------------------------------------------------------------------- */
-/*                    GEO³ – Hierarchical Reward Manager (HGC)                */
+/*                    GEO3 – Hierarchical Reward Manager (HGC)                */
 /* -------------------------------------------------------------------------- */
 /// @title GeoRewardManagerHGC
 /// @notice Versão descentralizada por agrupamento HGC da distribuição de CGT.
@@ -116,8 +118,9 @@ contract GeoRewardManagerHGC is AccessControl {
         bytes32[] calldata proof
     ) external {
         // verifica node ativo e controller
-        if (!did.isActive(msg.sender)) revert NodeInactive();
-        if (did.getController(msg.sender) != msg.sender) revert NotController();
+        (address controller, bool active) = did.getControllerAndStatus(msg.sender);
+        if (!active) revert NodeInactive();
+        if (controller != msg.sender) revert NotController();
 
         // garante não-duplicação
         uint256 bitIndex = _claimKey(epochWeek, geoBatchId, msg.sender);

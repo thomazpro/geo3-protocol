@@ -1,20 +1,24 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity 0.8.24;
 
 /* -------------------------------------------------------------------------- */
 /*                              External Interfaces                           */
 /* -------------------------------------------------------------------------- */
 
-/// @title IGeoToken – interface mínima de mint/burn para o RewardManager
-interface IGeoToken {
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+
+/// @title IGeoToken – interface mínima de mint para o RewardManager
+interface IGeoToken is IERC20 {
     function mint(address to, uint256 amount) external;
-    function transfer(address to, uint256 amount) external returns (bool);
 }
 
-/// @title INodeDIDRegistry – consulta de controller para address de node
+/// @title INodeDIDRegistry – consulta conjunta de controller e status
 interface INodeDIDRegistry {
-    function getController(address node) external view returns (address);
-    function isActive(address node) external view returns (bool);
+    function getControllerAndStatus(address node)
+        external
+        view
+        returns (address controller, bool active);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -23,9 +27,10 @@ interface INodeDIDRegistry {
 
 import {AccessControl}  from "@openzeppelin/contracts/access/AccessControl.sol";
 import {MerkleProof}    from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /* -------------------------------------------------------------------------- */
-/*                           GEO³ – GeoRewardManager                          */
+/*                           GEO3 – GeoRewardManager                          */
 /* -------------------------------------------------------------------------- */
 
 /// @title GeoRewardManager
@@ -34,32 +39,42 @@ import {MerkleProof}    from "@openzeppelin/contracts/utils/cryptography/MerkleP
 ///            uma árvore Merkle (leaf = nodeAddress, amount).
 ///          – Uma vez por semana publica (epochWeek, merkleRoot, totalToMint).
 ///          – Controllers dos nodes chamam `claim()` com prova para receber CGT.
-contract GeoRewardManager is AccessControl {
+contract GeoRewardManager is AccessControl, ReentrancyGuard {
+    using SafeERC20 for IGeoToken;
+
     /* ───────────── ROLES ───────────── */
-    bytes32 public constant ORACLE_ROLE  = keccak256("ORACLE_ROLE");  // publica ciclos de recompensa
-    bytes32 public constant MANAGER_ROLE = keccak256("MANAGER_ROLE"); // altera parâmetros críticos
+    /// @notice Papel autorizado a publicar ciclos de recompensa
+    bytes32 public constant ORACLE_ROLE  = keccak256("ORACLE_ROLE");
+
+    /// @notice Papel autorizado a alterar parâmetros críticos
+    bytes32 public constant MANAGER_ROLE = keccak256("MANAGER_ROLE");
 
     /* ───────────── ERRORS ───────────── */
     error CycleAlreadyExists();
+    error CycleNotPublished();
     error InvalidProof();
     error AlreadyClaimed();
     error NodeInactive();
+    error NotController();
+    error ZeroRootOrAmount();
 
     /* ─────────── CONFIG CONSTANTS ─────────── */
-    uint64  public immutable epochWindow; // nº de epochs (GeoDataRegistry) que formam 1 ciclo
+    /// @notice Número de epochs do GeoDataRegistry que compõem um ciclo de recompensa
+    uint64  public immutable epochWindow;
 
     /* ───────── STATE & STORAGE ─────── */
-    struct Cycle {
-        bytes32 merkleRoot;   // raiz das recompensas semanais
-        uint256 totalMinted;  // estatística
-    }
+    /// @notice Armazena a raiz Merkle de cada ciclo de recompensa
+    mapping(uint64 => bytes32) public cycleRoot;
 
-    mapping(uint64 => Cycle) public cycles;                        // epochWeek => ciclo
-    mapping(uint64 => mapping(address => bool)) public claimed;    // epochWeek => nodeAddress => claimed
+    /// @notice Marca se um node já reivindicou recompensa em determinado ciclo
+    mapping(uint64 => mapping(address => bool)) public claimed;
 
     /* External Contracts */
-    IGeoToken public immutable cgt;            // token CGT
-    INodeDIDRegistry public immutable did;    // registro de nodes (para validar controller & ativo)
+    /// @notice Referência ao token CGT
+    IGeoToken public immutable cgt;
+
+    /// @notice Registro de nodes utilizado para validar controller e status
+    INodeDIDRegistry public immutable did;
 
     /* ───────────── EVENTS ───────────── */
     event CyclePublished(uint64 indexed epochWeek, bytes32 root, uint256 totalMint);
@@ -87,6 +102,7 @@ contract GeoRewardManager is AccessControl {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Publica a raiz Merkle das recompensas de uma janela semanal
+    /// @dev Emite os tokens necessários e registra a raiz para futuras provas
     /// @param epochWeek   Identificador incremental (ex.: floor(epoch/epochWindow))
     /// @param merkleRoot  Raiz (hash) da árvore (nodeAddress, amount)
     /// @param totalToMint Total de tokens a serem emitidos para este ciclo
@@ -94,11 +110,12 @@ contract GeoRewardManager is AccessControl {
         uint64  epochWeek,
         bytes32 merkleRoot,
         uint256 totalToMint
-    ) external onlyRole(ORACLE_ROLE) {
-        if (cycles[epochWeek].merkleRoot != bytes32(0)) revert CycleAlreadyExists();
+    ) external onlyRole(ORACLE_ROLE) nonReentrant {
+        if (cycleRoot[epochWeek] != bytes32(0)) revert CycleAlreadyExists();
+        if (merkleRoot == bytes32(0) || totalToMint == 0) revert ZeroRootOrAmount();
 
         // registra o ciclo
-        cycles[epochWeek] = Cycle({merkleRoot: merkleRoot, totalMinted: totalToMint});
+        cycleRoot[epochWeek] = merkleRoot;
 
         // emite CGT para este contrato (minter role já delegada)
         cgt.mint(address(this), totalToMint);
@@ -111,6 +128,7 @@ contract GeoRewardManager is AccessControl {
     /* -------------------------------------------------------------------------- */
 
     /// @notice Controller reivindica CGT para um node específico em um ciclo
+    /// @dev Valida prova Merkle e verifica se o node está ativo e controlado pelo chamador
     /// @param epochWeek Ciclo de recompensa
     /// @param node      Endereço do node ligado ao controller
     /// @param amount    Valor esperado de recompensa
@@ -120,19 +138,21 @@ contract GeoRewardManager is AccessControl {
         address node,
         uint256 amount,
         bytes32[] calldata proof
-    ) external {
+    ) external nonReentrant {
+        bytes32 root = cycleRoot[epochWeek];
+        if (root == bytes32(0))       revert CycleNotPublished();
         if (claimed[epochWeek][node]) revert AlreadyClaimed();
-        if (!did.isActive(node))      revert NodeInactive();
 
-        // o caller deve ser o controller do node
-        require(did.getController(node) == msg.sender, "caller !controller");
+        (address controller, bool active) = did.getControllerAndStatus(node);
+        if (!active) revert NodeInactive();
+        if (controller != msg.sender) revert NotController();
 
         // verifica Merkle
         bytes32 leaf = keccak256(abi.encodePacked(node, amount));
-        if (!MerkleProof.verify(proof, cycles[epochWeek].merkleRoot, leaf)) revert InvalidProof();
+        if (!MerkleProof.verifyCalldata(proof, root, leaf)) revert InvalidProof();
 
         claimed[epochWeek][node] = true;
-        cgt.transfer(msg.sender, amount);
+        cgt.safeTransfer(msg.sender, amount);
 
         emit RewardClaimed(msg.sender, node, epochWeek, amount);
     }

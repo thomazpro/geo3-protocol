@@ -1,17 +1,20 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
 
+const { API_KEY, PRIVATE_KEY, POLYGONSCAN_KEY } = process.env;
+
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  solidity: "0.8.28",
+  solidity: "0.8.24",
   networks: {
+    // Polygon Amoy testnet
     amoy: {
-      url: process.env.RPC_URL_AMOY,
-      accounts: [process.env.PRIVATE_KEY],
-      chainId: 80002
-    }
+      url: `https://polygon-amoy.g.alchemy.com/v2/${API_KEY}`,
+      accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
+      chainId: 80002,
+    },
   },
   etherscan: {
-    apiKey: "YOUR_POLYGONSCAN_KEY" // opcional se for verificar contratos
-  }
+    apiKey: POLYGONSCAN_KEY,
+  },
 };
