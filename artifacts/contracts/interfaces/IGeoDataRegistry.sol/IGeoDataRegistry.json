@@ -1,0 +1,279 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IGeoDataRegistry",
+  "sourceName": "contracts/interfaces/IGeoDataRegistry.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "oracle",
+          "type": "address"
+        }
+      ],
+      "name": "addOracle",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "currentEpoch",
+      "outputs": [
+        {
+          "internalType": "uint64",
+          "name": "epoch",
+          "type": "uint64"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "epochMaxDelay",
+      "outputs": [
+        {
+          "internalType": "uint64",
+          "name": "maxDelay",
+          "type": "uint64"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "epochMinInterval",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "interval",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint64",
+          "name": "epoch",
+          "type": "uint64"
+        },
+        {
+          "internalType": "uint64",
+          "name": "geoBatchId",
+          "type": "uint64"
+        }
+      ],
+      "name": "getGeoBatch",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "merkleRoot",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "string",
+              "name": "dataCID",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct IGeoDataRegistry.GeoBatchMetadata",
+          "name": "metadata",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "pause",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint64",
+          "name": "epoch",
+          "type": "uint64"
+        },
+        {
+          "internalType": "uint64",
+          "name": "geoBatchId",
+          "type": "uint64"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "merkleRoot",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "string",
+          "name": "dataCID",
+          "type": "string"
+        }
+      ],
+      "name": "registerGeoBatch",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint64",
+          "name": "epoch",
+          "type": "uint64"
+        },
+        {
+          "internalType": "uint64[]",
+          "name": "geoBatchIds",
+          "type": "uint64[]"
+        },
+        {
+          "internalType": "bytes32[]",
+          "name": "merkleRoots",
+          "type": "bytes32[]"
+        },
+        {
+          "internalType": "string[]",
+          "name": "dataCIDs",
+          "type": "string[]"
+        }
+      ],
+      "name": "registerGeoBatchBulk",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "oracle",
+          "type": "address"
+        }
+      ],
+      "name": "removeOracle",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "sensorType",
+          "type": "uint8"
+        }
+      ],
+      "name": "sensorTypeMaxResolution",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "maxRes",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint64",
+          "name": "newMaxDelay",
+          "type": "uint64"
+        }
+      ],
+      "name": "setEpochMaxDelay",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "newInterval",
+          "type": "uint256"
+        }
+      ],
+      "name": "setEpochMinInterval",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "sensor",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint8",
+          "name": "maxRes",
+          "type": "uint8"
+        }
+      ],
+      "name": "setSensorType",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "unpause",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint64",
+          "name": "epoch",
+          "type": "uint64"
+        },
+        {
+          "internalType": "uint64",
+          "name": "geoBatchId",
+          "type": "uint64"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "leaf",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32[]",
+          "name": "proof",
+          "type": "bytes32[]"
+        }
+      ],
+      "name": "verifyLeafInBatch",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "valid",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

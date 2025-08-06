@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.24;
+// Author: Thomaz Valadares Gontijo (Aura Tecnologia)
+
+pragma solidity ^0.8.24;
 
 /// @title GeoCellIDLib – Biblioteca para manipulação de geo-identificadores (H3 + extensões)
 /// @notice Permite extrair, comparar, navegar e agrupar geoIds com extensão para compressão HGC.
