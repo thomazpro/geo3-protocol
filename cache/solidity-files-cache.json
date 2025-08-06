@@ -2,11 +2,11 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/contracts/GeoCellIDLib.sol": {
-      "lastModificationDate": 1751465301481,
-      "contentHash": "28b5a0262375bc8d7986d08a1d5c2eae",
+      "lastModificationDate": 1754491440139,
+      "contentHash": "7e9d652048086b023d39554061981732",
       "sourceName": "contracts/GeoCellIDLib.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -31,18 +31,18 @@
       },
       "imports": [],
       "versionPragmas": [
-        "^0.8.20"
+        "^0.8.24"
       ],
       "artifacts": [
         "GeoCellIDLib"
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/contracts/GeoDataRegistry.sol": {
-      "lastModificationDate": 1751501597790,
-      "contentHash": "a0c67e7c9f4eb37023e18f99753e5e3b",
+      "lastModificationDate": 1754491434000,
+      "contentHash": "b0abaeab0615d065be47376aa30e6257",
       "sourceName": "contracts/GeoDataRegistry.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -67,7 +67,6 @@
       },
       "imports": [
         "@openzeppelin/contracts/access/extensions/AccessControlEnumerable.sol",
-        "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
         "@openzeppelin/contracts/utils/Pausable.sol",
         "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol",
         "./GeoCellIDLib.sol"
@@ -80,11 +79,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/utils/ReentrancyGuard.sol": {
-      "lastModificationDate": 1751464197971,
+      "lastModificationDate": 1754421276345,
       "contentHash": "190613e556d509d9e9a0ea43dc5d891d",
       "sourceName": "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -116,11 +115,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/utils/Pausable.sol": {
-      "lastModificationDate": 1751464197971,
+      "lastModificationDate": 1754421276293,
       "contentHash": "0d47b53e10b1985efbb396f937626279",
       "sourceName": "@openzeppelin/contracts/utils/Pausable.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -154,11 +153,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/access/extensions/AccessControlEnumerable.sol": {
-      "lastModificationDate": 1751464197963,
-      "contentHash": "1c84b21784d3a96d315197cae2050f89",
+      "lastModificationDate": 1754491141229,
+      "contentHash": "593f486125c9090851de490e888b7f8c",
       "sourceName": "@openzeppelin/contracts/access/extensions/AccessControlEnumerable.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -184,7 +183,8 @@
       "imports": [
         "./IAccessControlEnumerable.sol",
         "../AccessControl.sol",
-        "../../utils/structs/EnumerableSet.sol"
+        "../../utils/structs/EnumerableSet.sol",
+        "../../utils/introspection/ERC165.sol"
       ],
       "versionPragmas": [
         "^0.8.20"
@@ -194,11 +194,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/utils/cryptography/MerkleProof.sol": {
-      "lastModificationDate": 1751464197971,
+      "lastModificationDate": 1754421276213,
       "contentHash": "d57b0dba03e8cc7942bf797fc9fe1d29",
       "sourceName": "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -232,11 +232,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/utils/Context.sol": {
-      "lastModificationDate": 1751464197967,
+      "lastModificationDate": 1754421275985,
       "contentHash": "67bfbc07588eb8683b3fd8f6f909563e",
       "sourceName": "@openzeppelin/contracts/utils/Context.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -268,11 +268,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/access/AccessControl.sol": {
-      "lastModificationDate": 1751464197963,
-      "contentHash": "849b15469d8e2bd01b49e6c632e448e7",
+      "lastModificationDate": 1754491141229,
+      "contentHash": "d0e2c05f09a3aea7cd299bbd4a435ee2",
       "sourceName": "@openzeppelin/contracts/access/AccessControl.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -308,11 +308,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/utils/structs/EnumerableSet.sol": {
-      "lastModificationDate": 1751464197967,
-      "contentHash": "9dea2f1d2615534fb7e64833ae92b7c3",
+      "lastModificationDate": 1754491141293,
+      "contentHash": "8fb55f589dba17bf8fd749c7549ce5cc",
       "sourceName": "@openzeppelin/contracts/utils/structs/EnumerableSet.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -336,7 +336,8 @@
         }
       },
       "imports": [
-        "../Arrays.sol"
+        "../Arrays.sol",
+        "../math/Math.sol"
       ],
       "versionPragmas": [
         "^0.8.20"
@@ -346,11 +347,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/access/extensions/IAccessControlEnumerable.sol": {
-      "lastModificationDate": 1751464197971,
-      "contentHash": "db2f5c4a4b96c637a30f05aba27464b3",
+      "lastModificationDate": 1754491141661,
+      "contentHash": "571941f1cd03601f828c57d9ff9c2d8e",
       "sourceName": "@openzeppelin/contracts/access/extensions/IAccessControlEnumerable.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -377,18 +378,18 @@
         "../IAccessControl.sol"
       ],
       "versionPragmas": [
-        "^0.8.20"
+        ">=0.8.4"
       ],
       "artifacts": [
         "IAccessControlEnumerable"
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol": {
-      "lastModificationDate": 1751464197967,
-      "contentHash": "7c03c1e37c3dc24eafb76dc2b8a5c3a6",
+      "lastModificationDate": 1754491141305,
+      "contentHash": "0906d06dca25210d4696dcef6dad2909",
       "sourceName": "@openzeppelin/contracts/utils/introspection/ERC165.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -422,11 +423,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/access/IAccessControl.sol": {
-      "lastModificationDate": 1751464197971,
-      "contentHash": "80621031deacf7066ec81277f9b1463a",
+      "lastModificationDate": 1754491141661,
+      "contentHash": "def1e8f7b6cac577cf2600655bf3bdf8",
       "sourceName": "@openzeppelin/contracts/access/IAccessControl.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -451,18 +452,18 @@
       },
       "imports": [],
       "versionPragmas": [
-        "^0.8.20"
+        ">=0.8.4"
       ],
       "artifacts": [
         "IAccessControl"
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
-      "lastModificationDate": 1751464197971,
-      "contentHash": "bf0119eb2a570f219729ff38b6cd1df8",
+      "lastModificationDate": 1754491141665,
+      "contentHash": "7074c93b1ea0a122063f26ddd1db1032",
       "sourceName": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -487,18 +488,18 @@
       },
       "imports": [],
       "versionPragmas": [
-        "^0.8.20"
+        ">=0.4.16"
       ],
       "artifacts": [
         "IERC165"
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/utils/Arrays.sol": {
-      "lastModificationDate": 1751464197963,
-      "contentHash": "87b3640dbda6477c44a91647d48ff29c",
+      "lastModificationDate": 1754491141229,
+      "contentHash": "e19f50397668e814730982e8f2aa6e56",
       "sourceName": "@openzeppelin/contracts/utils/Arrays.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -535,11 +536,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/utils/SlotDerivation.sol": {
-      "lastModificationDate": 1751464197975,
+      "lastModificationDate": 1754421276345,
       "contentHash": "43950136ee6a1761d2cbed39d16bb1e0",
       "sourceName": "@openzeppelin/contracts/utils/SlotDerivation.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -571,11 +572,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/utils/StorageSlot.sol": {
-      "lastModificationDate": 1751464197975,
+      "lastModificationDate": 1754421276345,
       "contentHash": "e656d64c4ce918f3d13030b91c935134",
       "sourceName": "@openzeppelin/contracts/utils/StorageSlot.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -607,11 +608,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/utils/Comparators.sol": {
-      "lastModificationDate": 1751464197967,
+      "lastModificationDate": 1754421275985,
       "contentHash": "0e57405a6f979853cbfeb0df3546c3a3",
       "sourceName": "@openzeppelin/contracts/utils/Comparators.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -643,11 +644,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/utils/math/Math.sol": {
-      "lastModificationDate": 1751464197971,
+      "lastModificationDate": 1754421276213,
       "contentHash": "5ec781e33d3a9ac91ffdc83d94420412",
       "sourceName": "@openzeppelin/contracts/utils/math/Math.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -682,11 +683,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/utils/Panic.sol": {
-      "lastModificationDate": 1751464197971,
+      "lastModificationDate": 1754421276293,
       "contentHash": "2133dc13536b4a6a98131e431fac59e1",
       "sourceName": "@openzeppelin/contracts/utils/Panic.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -718,11 +719,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol": {
-      "lastModificationDate": 1751464197975,
+      "lastModificationDate": 1754421276345,
       "contentHash": "2adca1150f58fc6f3d1f0a0f22ee7cca",
       "sourceName": "@openzeppelin/contracts/utils/math/SafeCast.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -754,11 +755,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/utils/cryptography/Hashes.sol": {
-      "lastModificationDate": 1751464197971,
+      "lastModificationDate": 1754421276213,
       "contentHash": "073b9c3ce7bc358a876ed2b3479db88c",
       "sourceName": "@openzeppelin/contracts/utils/cryptography/Hashes.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -790,11 +791,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/contracts/alternative/GeoRewardManagerHGC.sol": {
-      "lastModificationDate": 1751501789240,
-      "contentHash": "783331ce9ecbd4f59e30486318496579",
+      "lastModificationDate": 1754421117817,
+      "contentHash": "1aff9bfb8e7ed7170519c6b100b3177f",
       "sourceName": "contracts/alternative/GeoRewardManagerHGC.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -823,7 +824,7 @@
         "@openzeppelin/contracts/utils/structs/BitMaps.sol"
       ],
       "versionPragmas": [
-        "^0.8.24"
+        "0.8.24"
       ],
       "artifacts": [
         "GeoRewardManagerHGC",
@@ -832,11 +833,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/utils/structs/BitMaps.sol": {
-      "lastModificationDate": 1751464197967,
+      "lastModificationDate": 1754421275961,
       "contentHash": "08db537a4d967259b9c44f2ebf865357",
       "sourceName": "@openzeppelin/contracts/utils/structs/BitMaps.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -868,11 +869,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/utils/Strings.sol": {
-      "lastModificationDate": 1751464197975,
-      "contentHash": "13dbc135f563c72a11b1cf4fbb5fb284",
+      "lastModificationDate": 1754491141673,
+      "contentHash": "d8f70caf0e0c77dc908176ed44812fb7",
       "sourceName": "@openzeppelin/contracts/utils/Strings.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -908,11 +909,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/utils/math/SignedMath.sol": {
-      "lastModificationDate": 1751464197975,
+      "lastModificationDate": 1754421276345,
       "contentHash": "ae3528afb8bdb0a7dcfba5b115ee8074",
       "sourceName": "@openzeppelin/contracts/utils/math/SignedMath.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -946,11 +947,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol": {
-      "lastModificationDate": 1751464197971,
+      "lastModificationDate": 1754491141669,
       "contentHash": "260f3968eefa3bbd30520cff5384cd93",
       "sourceName": "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -984,11 +985,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/utils/cryptography/EIP712.sol": {
-      "lastModificationDate": 1751464197967,
-      "contentHash": "b21731956bbef780b4cc856e8dda7426",
+      "lastModificationDate": 1754491141293,
+      "contentHash": "d67dfba302ed2489324d7584625c3bde",
       "sourceName": "@openzeppelin/contracts/utils/cryptography/EIP712.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -1024,11 +1025,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/utils/ShortStrings.sol": {
-      "lastModificationDate": 1751464197975,
+      "lastModificationDate": 1754421276345,
       "contentHash": "c1be9487e5a64acf23b5d8028482e748",
       "sourceName": "@openzeppelin/contracts/utils/ShortStrings.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -1062,11 +1063,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/interfaces/IERC5267.sol": {
-      "lastModificationDate": 1751464197971,
-      "contentHash": "94364524cb1a39dcbc3d3afff6d8e53e",
+      "lastModificationDate": 1754491141669,
+      "contentHash": "6e00d2fe4bc0d5f1add753824498bb35",
       "sourceName": "@openzeppelin/contracts/interfaces/IERC5267.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -1091,18 +1092,18 @@
       },
       "imports": [],
       "versionPragmas": [
-        "^0.8.20"
+        ">=0.4.16"
       ],
       "artifacts": [
         "IERC5267"
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol": {
-      "lastModificationDate": 1751464197967,
-      "contentHash": "b1a8fc63b83ce00408e0c9ed1230b717",
+      "lastModificationDate": 1754491141313,
+      "contentHash": "2343c0c3b51267f4f2639ec3f99cd63e",
       "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -1140,11 +1141,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol": {
-      "lastModificationDate": 1751464197967,
-      "contentHash": "57d79df281f57bbb1b09214c7914f877",
+      "lastModificationDate": 1754491141313,
+      "contentHash": "59dfce11284f2636db261df9b6a18f81",
       "sourceName": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -1181,11 +1182,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/utils/Nonces.sol": {
-      "lastModificationDate": 1751464197971,
+      "lastModificationDate": 1754421276289,
       "contentHash": "c32d108058718efb9061b88e83a83f79",
       "sourceName": "@openzeppelin/contracts/utils/Nonces.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -1217,11 +1218,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol": {
-      "lastModificationDate": 1751464197967,
+      "lastModificationDate": 1754421276017,
       "contentHash": "81de029d56aa803972be03c5d277cb6c",
       "sourceName": "@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -1253,11 +1254,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol": {
-      "lastModificationDate": 1751464197971,
-      "contentHash": "94ec15baf0d5df863f45b8f351937ec7",
+      "lastModificationDate": 1754491141665,
+      "contentHash": "b01905745d47df90c7bd5dd70d498cb7",
       "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -1282,18 +1283,18 @@
       },
       "imports": [],
       "versionPragmas": [
-        "^0.8.20"
+        ">=0.4.16"
       ],
       "artifacts": [
         "IERC20Permit"
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/interfaces/draft-IERC6093.sol": {
-      "lastModificationDate": 1751464197967,
-      "contentHash": "267d92fe4de67b1bdb3302c08f387dbf",
+      "lastModificationDate": 1754491141241,
+      "contentHash": "5041977bbe908de2e6ed0270447f79ad",
       "sourceName": "@openzeppelin/contracts/interfaces/draft-IERC6093.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -1318,7 +1319,7 @@
       },
       "imports": [],
       "versionPragmas": [
-        "^0.8.20"
+        ">=0.8.4"
       ],
       "artifacts": [
         "IERC1155Errors",
@@ -1327,11 +1328,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
-      "lastModificationDate": 1751464197971,
-      "contentHash": "8f19f64d2adadf448840908bbaf431c8",
+      "lastModificationDate": 1754491141665,
+      "contentHash": "9261adf6457863de3e9892f51317ec89",
       "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -1356,18 +1357,18 @@
       },
       "imports": [],
       "versionPragmas": [
-        "^0.8.20"
+        ">=0.4.16"
       ],
       "artifacts": [
         "IERC20"
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": {
-      "lastModificationDate": 1751464197971,
-      "contentHash": "794db3115001aa372c79326fcfd44b1f",
+      "lastModificationDate": 1754491141665,
+      "contentHash": "513778b30d2750f5d2b9b19bbcf748a5",
       "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -1394,18 +1395,18 @@
         "../IERC20.sol"
       ],
       "versionPragmas": [
-        "^0.8.20"
+        ">=0.6.2"
       ],
       "artifacts": [
         "IERC20Metadata"
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Capped.sol": {
-      "lastModificationDate": 1751464197967,
-      "contentHash": "599b6100008da0cc7875f57044251679",
+      "lastModificationDate": 1754491141313,
+      "contentHash": "20fffd194742c49590cb733590e7a8bd",
       "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/ERC20Capped.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -1439,11 +1440,11 @@
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/contracts/GeoToken.sol": {
-      "lastModificationDate": 1751482118698,
-      "contentHash": "f700227bf60680ee3fac7241e1fde3af",
+      "lastModificationDate": 1754491273487,
+      "contentHash": "13f3f7c91e42dbbe47a87a7f46feb7c9",
       "sourceName": "contracts/GeoToken.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -1473,18 +1474,18 @@
         "@openzeppelin/contracts/access/AccessControl.sol"
       ],
       "versionPragmas": [
-        "^0.8.24"
+        "0.8.24"
       ],
       "artifacts": [
         "GeoToken"
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/contracts/alternative/GeoDataRegistrySuperRoot.sol": {
-      "lastModificationDate": 1751501520679,
-      "contentHash": "ed5d31054fd90dd9fc9150d191e4463d",
+      "lastModificationDate": 1754421117817,
+      "contentHash": "8a9cdf61aed7b61c95f00e07bcfb264f",
       "sourceName": "contracts/alternative/GeoDataRegistrySuperRoot.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -1514,57 +1515,18 @@
         "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol"
       ],
       "versionPragmas": [
-        "^0.8.24"
+        "0.8.24"
       ],
       "artifacts": [
         "GeoDataRegistrySuperRoot"
       ]
     },
     "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/contracts/NodeDIDRegistry.sol": {
-      "lastModificationDate": 1751500552057,
-      "contentHash": "08beed865307c59bb91e90bbaa801c87",
+      "lastModificationDate": 1754491408862,
+      "contentHash": "479c64bff6470d679737630f462340ec",
       "sourceName": "contracts/NodeDIDRegistry.sol",
       "solcConfig": {
-        "version": "0.8.28",
-        "settings": {
-          "evmVersion": "paris",
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/access/AccessControl.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.24"
-      ],
-      "artifacts": [
-        "ISensorResolver",
-        "NodeDIDRegistry"
-      ]
-    },
-    "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/contracts/GeoRewardManager.sol": {
-      "lastModificationDate": 1751501620108,
-      "contentHash": "b000f1263a394753ba59c6355c309bac",
-      "sourceName": "contracts/GeoRewardManager.sol",
-      "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
@@ -1589,7 +1551,51 @@
       },
       "imports": [
         "@openzeppelin/contracts/access/AccessControl.sol",
-        "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol"
+        "@openzeppelin/contracts/utils/cryptography/EIP712.sol",
+        "@openzeppelin/contracts/utils/cryptography/ECDSA.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.24"
+      ],
+      "artifacts": [
+        "ISensorResolver",
+        "NodeDIDRegistry"
+      ]
+    },
+    "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/contracts/GeoRewardManager.sol": {
+      "lastModificationDate": 1754491430921,
+      "contentHash": "813e64e8de5853560f2f9e50816f69b9",
+      "sourceName": "contracts/GeoRewardManager.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
+        "@openzeppelin/contracts/access/AccessControl.sol",
+        "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol",
+        "@openzeppelin/contracts/utils/ReentrancyGuard.sol"
       ],
       "versionPragmas": [
         "^0.8.24"
@@ -1598,6 +1604,411 @@
         "GeoRewardManager",
         "IGeoToken",
         "INodeDIDRegistry"
+      ]
+    },
+    "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/contracts/mocks/MockGeoCellIDLib.sol": {
+      "lastModificationDate": 1754421067980,
+      "contentHash": "f07b234e490644038d3efebafe28c656",
+      "sourceName": "contracts/mocks/MockGeoCellIDLib.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../GeoCellIDLib.sol"
+      ],
+      "versionPragmas": [
+        "0.8.24"
+      ],
+      "artifacts": [
+        "MockGeoCellIDLib"
+      ]
+    },
+    "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/interfaces/IERC20.sol": {
+      "lastModificationDate": 1754491141665,
+      "contentHash": "68620db2da7583d9a4919096ac77f577",
+      "sourceName": "@openzeppelin/contracts/interfaces/IERC20.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        ">=0.4.16"
+      ],
+      "artifacts": []
+    },
+    "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/interfaces/IERC1363.sol": {
+      "lastModificationDate": 1754491141665,
+      "contentHash": "a7fd0f05e36b0d0a21c75340c9c639ec",
+      "sourceName": "@openzeppelin/contracts/interfaces/IERC1363.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IERC20.sol",
+        "./IERC165.sol"
+      ],
+      "versionPragmas": [
+        ">=0.6.2"
+      ],
+      "artifacts": [
+        "IERC1363"
+      ]
+    },
+    "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/interfaces/IERC165.sol": {
+      "lastModificationDate": 1754491141665,
+      "contentHash": "947853028399b7de34bcc3704ee06e99",
+      "sourceName": "@openzeppelin/contracts/interfaces/IERC165.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../utils/introspection/IERC165.sol"
+      ],
+      "versionPragmas": [
+        ">=0.4.16"
+      ],
+      "artifacts": []
+    },
+    "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol": {
+      "lastModificationDate": 1754491141673,
+      "contentHash": "1fb9edee1d763745a62d0b1954998792",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../IERC20.sol",
+        "../../../interfaces/IERC1363.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "SafeERC20"
+      ]
+    },
+    "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/contracts/interfaces/IGeoDataRegistry.sol": {
+      "lastModificationDate": 1754421067976,
+      "contentHash": "9f34163f3680244df7a3a920fc640248",
+      "sourceName": "contracts/interfaces/IGeoDataRegistry.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.24"
+      ],
+      "artifacts": [
+        "IGeoDataRegistry"
+      ]
+    },
+    "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/contracts/interfaces/IGeoRewardManager.sol": {
+      "lastModificationDate": 1754421067976,
+      "contentHash": "3fce18385c2a6240625ee6f4bbf8bb46",
+      "sourceName": "contracts/interfaces/IGeoRewardManager.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.24"
+      ],
+      "artifacts": [
+        "IGeoRewardManager"
+      ]
+    },
+    "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/contracts/interfaces/IGeoToken.sol": {
+      "lastModificationDate": 1754421067976,
+      "contentHash": "e42be57081555a199aca5a1220b31ae2",
+      "sourceName": "contracts/interfaces/IGeoToken.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.24"
+      ],
+      "artifacts": [
+        "IGeoToken"
+      ]
+    },
+    "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/contracts/interfaces/INodeDIDRegistry.sol": {
+      "lastModificationDate": 1754421067980,
+      "contentHash": "ff2231c1a9af4c15e82f3adcf8c7eccf",
+      "sourceName": "contracts/interfaces/INodeDIDRegistry.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.24"
+      ],
+      "artifacts": [
+        "INodeDIDRegistry"
+      ]
+    },
+    "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/contracts/mocks/MockSensorResolver.sol": {
+      "lastModificationDate": 1754421067980,
+      "contentHash": "9465afd3391a024a046503093e24510f",
+      "sourceName": "contracts/mocks/MockSensorResolver.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.24"
+      ],
+      "artifacts": [
+        "MockSensorResolver"
+      ]
+    },
+    "/home/thomaz/Área de Trabalho/Aura/geo3-protocol/contracts/mocks/ReentrantToken.sol": {
+      "lastModificationDate": 1754421067980,
+      "contentHash": "33aeaccb85179ffe1fe05bf0899752d1",
+      "sourceName": "contracts/mocks/ReentrantToken.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.24"
+      ],
+      "artifacts": [
+        "IGeoRewardManagerClaim",
+        "ReentrantToken"
       ]
     }
   }

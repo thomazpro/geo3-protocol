@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.24;
+// Author: Thomaz Valadares Gontijo (Aura Tecnologia)
+
+pragma solidity ^0.8.24;
 
 import {AccessControlEnumerable} from "@openzeppelin/contracts/access/extensions/AccessControlEnumerable.sol";
 import {Pausable}         from "@openzeppelin/contracts/utils/Pausable.sol";
