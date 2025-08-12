@@ -1,196 +1,120 @@
-# GEO3 Protocol
+# GEO3 Pipeline
 
-Infraestrutura pública e auditável para registrar e remunerar dados ambientais utilizando o padrão **HGC (Hierarchical Geospatial Compression)**. O projeto combina sensores físicos, compressão geoespacial e contratos inteligentes para criar uma rede DePIN focada na preservação da Terra.
+GEO3 — Infraestrutura Pública para Dados Físicos On-Chain
 
-## Requisitos
+O GEO3 é uma infraestrutura descentralizada para coletar, comprimir e registrar dados físicos na blockchain de forma auditável e programável. Ele conecta dispositivos no mundo real — como sensores ambientais, câmeras e medidores de qualidade da água — a contratos inteligentes e armazenamento distribuído, criando um fluxo confiável do evento físico até o registro imutável.
 
-- Node.js >= 18
+## O que torna o GEO3 único
+
+- **Compressão Geoespacial Hierárquica (HGC)**: algoritmo proprietário capaz de agregar dados em múltiplos níveis de resolução H3, preservando a inteligência geográfica e reduzindo custos de gás.
+- **Verificabilidade completa**: uso de árvores de Merkle e provas determinísticas para auditar qualquer dado publicado.
+- **Integração híbrida on-chain/off-chain**: oráculos especializados para envio de batches compactados e metadados para IPFS.
+- **Design modular**: arquitetura separada entre protocolo (contratos inteligentes e bibliotecas) e HGC + simulador (compressão, benchmarks e pipeline de publicação).
+- **Foco institucional e DePIN**: pensado para aplicações em seguros paramétricos, crédito rural, finanças verdes, auditorias ESG e monitoramento ambiental em escala nacional.
+
+## Relação com o GEO3
+Este repositório integra o simulador off-chain, a compressão HGC e os contratos inteligentes do protocolo, compondo um pipeline completo que liga sensores físicos ao registro on-chain do GEO3.
+
+Materiais oficiais e atualizações do projeto podem ser encontrados em [geo3.org](https://geo3.org).
+
+## Visão Geral
+O projeto coordena geração, compressão e ancoragem de leituras ambientais.
+Esse fluxo abastece a plataforma GEO3, que expõe os dados de forma pública e
+auditável para aplicações ambientais.
+
+## Quick Start
+
+### Requisitos
+- Node.js ≥ 18
 - npm
-- Hardhat 2.25+
+- Hardhat
 
-## Configuração do `.env`
-
-O projeto utiliza variáveis de ambiente para credenciais e chaves. Use o arquivo `example.env` como referência:
-
+### Simulador
 ```bash
-cp example.env .env
-# edite com suas informações
+cd hgc && npm install && npm run nodes && npm run samples && npm run epoch
 ```
 
-- `PRIVATE_KEY`: chave privada da conta deployer.
-- `API_KEY`: chave do provedor RPC (Alchemy, Infura etc.).
-- `POLYGONSCAN_KEY`: chave de API do Polygonscan (opcional para verificação).
-
-## Estrutura do repositório
-
-```
-contracts/    contratos inteligentes
-scripts/      scripts de deploy
-test/         testes Hardhat
-ignition/     módulos para Hardhat Ignition
-```
-
-## Contratos
-
-A stack on-chain é composta pelos seguintes contratos:
-
-| Contrato | Função principal |
-|----------|-----------------|
-| `GeoToken` | Token nativo CGT (ERC20) com *cap* e *permit*. Utilizado para recompensas. |
-| `NodeDIDRegistry` | Registro de identidade descentralizada dos nós físicos (DID), com controle de acesso e assinatura EIP‑712. |
-| `GeoDataRegistry` | Armazena lotes de dados geoespaciais. Cada lote possui `geoBatchId`, `merkleRoot` e `dataCID` (IPFS/URL). |
-| `GeoRewardManager` | Publica ciclos semanais de recompensa (Merkle root) e permite `claim()` pelos *controllers* dos nós. |
-| `GeoCellIDLib` | Biblioteca de manipulação de identificadores H3 estendidos para compressão HGC. |
-
-Os dados gerados pelos sensores são comprimidos off‑chain, publicados em IPFS e ancorados on‑chain através das raízes Merkle registradas no `GeoDataRegistry`. Semanalmente, o oráculo agrega leituras e o `GeoRewardManager` distribui CGT conforme o desempenho de cada node.
-
-### GeoToken
-
-Token utilitário ERC20 (símbolo **CGT**) com limite de emissão (`ERC20Capped`) e suporte a `permit` (EIP‑2612).
-Principais papéis:
-
-- `MINTER_ROLE` – cunha CGT (delegado ao `GeoRewardManager`);
-- `BURNER_ROLE` – queima tokens;
-- `DEFAULT_ADMIN_ROLE` – configura papéis e define o `rewardManager`.
-
-### NodeDIDRegistry
-
-Registro de identidade descentralizada dos nodes físicos.
-Funcionalidades:
-
-- `registerNode` / `registerMultipleNodes` validam assinatura EIP‑712 do hardware;
-- mantém `controller` (carteira responsável) e `metadataURI` (DID Document);
-- `MANAGER_ROLE` pode ativar/desativar nodes e trocar controllers;
-- integra‑se ao `GeoDataRegistry` via `sensorResolver` para validar `nodeType`.
-
-### GeoDataRegistry
-
-Armazena lotes de dados geoespaciais agregados.
-Recursos:
-
-- `registerGeoBatch` e `registerGeoBatchBulk` publicam `geoBatchId`, `merkleRoot` e `dataCID`;
-- política de epochs (`epochMinInterval`, `epochMaxDelay`);
-- restrição de resolução por `sensorType` (`setSensorType`);
-- roles: `ORACLE_ROLE` publica lotes e `MANAGER_ROLE` ajusta parâmetros;
-- utiliza `GeoCellIDLib` para validar `geoBatchId` em HGC.
-
-### GeoRewardManager
-
-Distribui CGT com base em ciclos semanais. Principais funções:
-
-- `publishCycle` registra a raiz Merkle e emite tokens para o contrato;
-- `claim` valida prova Merkle, verifica status do node e transfere CGT ao `controller`;
-- usa `epochWindow` para mapear epochs do `GeoDataRegistry`.
-
-### GeoCellIDLib
-
-Biblioteca de utilidades para o padrão HGC. Permite extrair cabeçalho `sensorType`, navegar entre níveis (`parentOf`, `aggregationGroup`) e comparar células (`isAncestorOf`, `isSameRoot`) mantendo compatibilidade com `H3` em *cell mode*.
-
-## Como compilar
-
+### Contratos
 ```bash
-npm install
-npm run compile
+cd protocol && npm install && npm test && npm run verify
 ```
 
-## Como testar
+## Pipeline end-to-end
+1. **Geração de nodes** – cria identidades simuladas para sensores físicos.
+2. **Coleta de amostras** – produz leituras ambientais agrupadas por epoch.
+3. **Execução do epoch** – comprime as amostras via HGC, faz upload para
+   IPFS e registra os lotes no contrato `GeoDataRegistry`.
+4. **Verificação** – reprocessa os arquivos gerados e confere hashes e
+   raízes Merkle.
+5. **Benchmark & relatório** – calcula taxas de compressão e gera um
+   `REPORT.md` com os resultados.
 
+## Scripts
+Os scripts estão distribuídos em dois subprojetos. Certifique‑se de estar no
+ diretório correto antes de executá‑los.
+
+### Simulador (`hgc`)
 ```bash
-npm test
+npm run nodes   # gera nodes simulados
+npm run samples # gera amostras para o epoch atual
+npm run epoch   # executa o pipeline do epoch (gera lotes e registra na chain)
 ```
 
-## Deploy
-
+### Contratos (`protocol`)
 ```bash
-npx hardhat run scripts/deploy-geo3.js --network amoy
+npm run verify -- --dir data/epoch_1 # valida arquivos de um epoch
+npm run bench -- 1                   # registra estatísticas do epoch 1
+npm run report                       # gera reports/REPORT.md a partir dos benchmarks
 ```
 
+## Arquivos `.env.example`
+O repositório possui três arquivos de exemplo de variáveis de ambiente:
 
-### Lint e formatação
+- [`.env.example`](./.env.example) – variáveis compartilhadas como `PINATA_JWT`, `POLYGON_RPC_URL`, `PRIVATE_KEY`, endereços dos contratos (`GEO_DATA_REGISTRY`, `NODE_DID_REGISTRY`, `GEO_REWARD_MANAGER`) e `NEXT_PUBLIC_MAPBOX_TOKEN`.
+- [`hgc/.env.example`](./hgc/.env.example) – reservado para configurações do simulador HGC. Atualmente não há variáveis obrigatórias.
+- [`protocol/.env.example`](./protocol/.env.example) – credenciais para os contratos: `PRIVATE_KEY`, `API_KEY` do provedor RPC e `POLYGONSCAN_KEY`.
 
-```bash
-npm run lint
-npm run format
-```
+## Experimentos de compressão
+### Configurando parâmetros e volumes
+- Ajuste parâmetros do HGC via variáveis de ambiente ou flags: `HGC_BASE_RES`, `HGC_MIN_RES`, `HGC_MAX_LEAVES_PER_BATCH`, `HGC_MAX_SAMPLES_PER_BATCH`, `HGC_HYSTERESIS_NEAR` e `HGC_HYSTERESIS_FAR`.
+- Defina o volume de dados com `npm run nodes -- --nodes=<N>` e `npm run samples -- --epoch=<E> --samples=<S>` para controlar número de nodes e amostras por node.
 
+### Executando o orquestrador
+- Use `npm run epoch -- --epoch=<E>` para comprimir as amostras do epoch e registrar os lotes. Os resultados ficam em `hgc/data/epoch_<E>/` e, se configurado, são enviados ao IPFS e à chain.
 
-### Verificação no Polygonscan
+### Relatórios
+- Após cada execução, registre estatísticas com `cd protocol && npm run bench -- <E>`; os dados são gravados em `reports/data/bench.json` e `bench.csv`.
+- Gere um relatório comparativo com `npm run report`, que consolida os benchmarks em `reports/REPORT.md`.
 
-```bash
-npx hardhat verify --network amoy <endereco> <argumentos-do-construtor>
-```
+### Analisando trade-offs
+- O cenário S2 (1000 nodes, 12 amostras) alcançou compressão de 4.80x ao custo de 5.35M gas.
+- O cenário S1 alcançou compressão de 4.00x com custo de 6.58M gas.
+- Aumentar o volume para 2000 nodes no cenário S6 elevou a compressão para 5.33x, mas o custo subiu para 9.47M gas, ilustrando o equilíbrio entre compressão hierárquica e gasto de gas.
 
-Certifique-se de definir `POLYGONSCAN_KEY` no `.env`. Os argumentos de cada construtor podem ser consultados no script de deploy.
+## Modo mock de IPFS e chain
+O arquivo [.env.example](./.env.example) lista variáveis para integração com
+Pinata e com a rede Polygon. Se `PINATA_JWT` ou as credenciais da chain não
+forem fornecidas, o sistema opera em modo *mock*:
 
+- **IPFS** – arquivos são copiados para `data/ipfs-mock/` e é retornado o
+  hash SHA‑256 local.
+- **Chain** – as transações são gravadas em `data/mock-chain.json` em vez de
+  enviar para a blockchain.
 
-## Registrando nodes
+## Desenvolvimento
+- Testes do simulador: `cd hgc && npm test`
+- Testes dos contratos: `cd protocol && npm test`
+- CI: o repositório utiliza GitHub Actions para lint, testes e geração de
+  relatórios (localmente pode‑se usar `npm run ci` no simulador).
 
-1. Cada node assina uma mensagem EIP‑712 contendo seu `nodeAddress`, `controller`, `nodeType` e `metadataURI`.
-2. Uma conta com `MANAGER_ROLE` chama `registerMultipleNodes` (ou `registerNode`) passando os dados e assinaturas.
+## Relatórios
 
-Exemplo em script Hardhat (ethers.js):
+Relatórios resumidos estão disponíveis no diretório [`reports`](./reports):
 
-```js
-const registry = await ethers.getContract("NodeDIDRegistry");
-await registry.registerMultipleNodes(
-  [nodeAddress],
-  [nodeType],
-  [controller],
-  ["ipfs://cid"],
-  [signature]
-);
-```
+- [Desempenho da Compressão HGC](./reports/archives/hgc-compression.md)
+- [Conformidade Geoespacial](./reports/archives/geospatial-compliance.md)
+- [Desempenho dos Contratos](./reports/archives/contract-performance.md)
 
-## Registrando batches de dados
-
-Somente endereços com `ORACLE_ROLE` podem registrar lotes:
-
-```js
-const dataRegistry = await ethers.getContract("GeoDataRegistry");
-const epoch = await dataRegistry.currentEpoch();
-await dataRegistry.registerGeoBatch(
-  epoch,
-  geoBatchId,
-  merkleRoot,
-  "ipfs://data-cid"
-);
-```
-
-É possível enviar vários lotes de uma vez com `registerGeoBatchBulk`.
-
-## Hierarchical Geospatial Compression (HGC)
-
-HGC é uma extensão ao índice hexagonal **H3** que adiciona um cabeçalho binário e regras de agregação hierárquica. Isso permite:
-
-- Compactar grandes volumes de dados mantendo a relação espacial;
-- Agrupar células por nível de resolução (`GeoCellIDLib`);
-- Construir árvores Merkle determinísticas e auditáveis com baixo custo on-chain.
-
-### Composição do `geoId`
-
-Cada célula é identificada por um `geoId` de 64 bits que segue o formato:
-
-```
-[sensorType (8 bits)] [H3 cell index (56 bits)]
-```
-
-- **sensorType** – cabeçalho que define a categoria do sensor ou métrica (0‑255).
-- **H3 cell index** – os 56 bits menos significativos preservam a estrutura padrão do H3
-  em *cell mode*, incluindo nível de resolução, célula base e dígitos hierárquicos.
-
-Ao reservar os 8 bits superiores para o `sensorType`, conseguimos multiplexar leituras de diferentes
-sensores sem perder a compatibilidade com o ecossistema H3. Todas as operações de agregação e
-navegação fornecidas pela `GeoCellIDLib` funcionam sobre esse mesmo layout, permitindo compressão
-hierárquica e comparação eficiente entre células.
-
-## Créditos
-
-O projeto GEO3 é uma iniciativa da **Aura Tecnologia**, desenvolvida como infraestrutura pública para dados ambientais auditáveis.
-
-Os contratos inteligentes deste protocolo foram criados por **Thomaz Valadares Gontijo**, sob licença MIT, como parte do compromisso da Aura com tecnologia aberta, confiável e soberana.
-
-Contribuições são bem-vindas.
-
-## Licença
-
-Distribuído sob a licença MIT. Consulte `LICENSE` para mais informações.
+## Autoria e Licença
+Desenvolvido pela Aura Tecnologia, com autoria de Thomaz Valadares Gontijo.
+Distribuído sob a licença [MIT](./LICENSE).

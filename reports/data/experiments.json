@@ -1,0 +1,334 @@
+[
+  {
+    "volume": 1000,
+    "generatedParamSets": [
+      {
+        "baseRes": 8,
+        "maxLeavesPerBatch": 1024
+      },
+      {
+        "baseRes": 8,
+        "maxLeavesPerBatch": 4096,
+        "maxSamplesPerBatch": 16000,
+        "hysteresisNear": 0.9,
+        "hysteresisFar": 1.1
+      },
+      {
+        "baseRes": 8,
+        "maxLeavesPerBatch": 8192,
+        "maxSamplesPerBatch": 32000,
+        "hysteresisNear": 0.95,
+        "hysteresisFar": 1.05
+      }
+    ]
+  },
+  {
+    "epoch": 1,
+    "volume": 1000,
+    "params": {
+      "baseRes": 8,
+      "maxLeavesPerBatch": 1024
+    },
+    "seed": 37990944,
+    "times": {
+      "nodes": 586,
+      "samples": 552,
+      "epoch": 783,
+      "bench": 956
+    },
+    "nodesProcessed": 1000,
+    "samplesGenerated": 12000,
+    "error": null
+  },
+  {
+    "epoch": 2,
+    "volume": 1000,
+    "params": {
+      "baseRes": 8,
+      "maxLeavesPerBatch": 4096,
+      "maxSamplesPerBatch": 16000,
+      "hysteresisNear": 0.9,
+      "hysteresisFar": 1.1
+    },
+    "seed": 596381180,
+    "times": {
+      "nodes": 594,
+      "samples": 575,
+      "epoch": 766,
+      "bench": 981
+    },
+    "nodesProcessed": 1000,
+    "samplesGenerated": 12000,
+    "error": null
+  },
+  {
+    "epoch": 3,
+    "volume": 1000,
+    "params": {
+      "baseRes": 8,
+      "maxLeavesPerBatch": 8192,
+      "maxSamplesPerBatch": 32000,
+      "hysteresisNear": 0.95,
+      "hysteresisFar": 1.05
+    },
+    "seed": 443033799,
+    "times": {
+      "nodes": 646,
+      "samples": 581,
+      "epoch": 773,
+      "bench": 796
+    },
+    "nodesProcessed": 1000,
+    "samplesGenerated": 12000,
+    "error": null
+  },
+  {
+    "volume": 5000,
+    "generatedParamSets": [
+      {
+        "baseRes": 8,
+        "maxLeavesPerBatch": 1024
+      },
+      {
+        "baseRes": 8,
+        "maxLeavesPerBatch": 4096,
+        "maxSamplesPerBatch": 16000,
+        "hysteresisNear": 0.9,
+        "hysteresisFar": 1.1
+      },
+      {
+        "baseRes": 8,
+        "maxLeavesPerBatch": 8192,
+        "maxSamplesPerBatch": 32000,
+        "hysteresisNear": 0.95,
+        "hysteresisFar": 1.05
+      }
+    ]
+  },
+  {
+    "epoch": 4,
+    "volume": 5000,
+    "params": {
+      "baseRes": 8,
+      "maxLeavesPerBatch": 1024
+    },
+    "seed": 116176719,
+    "times": {
+      "nodes": 765,
+      "samples": 839,
+      "epoch": 1520,
+      "bench": 1042
+    },
+    "nodesProcessed": 5000,
+    "samplesGenerated": 60000,
+    "error": null
+  },
+  {
+    "epoch": 5,
+    "volume": 5000,
+    "params": {
+      "baseRes": 8,
+      "maxLeavesPerBatch": 4096,
+      "maxSamplesPerBatch": 16000,
+      "hysteresisNear": 0.9,
+      "hysteresisFar": 1.1
+    },
+    "seed": 218167108,
+    "times": {
+      "nodes": 698,
+      "samples": 799,
+      "epoch": 1558,
+      "bench": 875
+    },
+    "nodesProcessed": 5000,
+    "samplesGenerated": 60000,
+    "error": null
+  },
+  {
+    "epoch": 6,
+    "volume": 5000,
+    "params": {
+      "baseRes": 8,
+      "maxLeavesPerBatch": 8192,
+      "maxSamplesPerBatch": 32000,
+      "hysteresisNear": 0.95,
+      "hysteresisFar": 1.05
+    },
+    "seed": 69699792,
+    "times": {
+      "nodes": 691,
+      "samples": 828,
+      "epoch": 1503,
+      "bench": 931
+    },
+    "nodesProcessed": 5000,
+    "samplesGenerated": 60000,
+    "error": null
+  },
+  {
+    "volume": 10000,
+    "generatedParamSets": [
+      {
+        "baseRes": 8,
+        "maxLeavesPerBatch": 1024
+      },
+      {
+        "baseRes": 8,
+        "maxLeavesPerBatch": 4096,
+        "maxSamplesPerBatch": 16000,
+        "hysteresisNear": 0.9,
+        "hysteresisFar": 1.1
+      },
+      {
+        "baseRes": 8,
+        "maxLeavesPerBatch": 8192,
+        "maxSamplesPerBatch": 32000,
+        "hysteresisNear": 0.95,
+        "hysteresisFar": 1.05
+      }
+    ]
+  },
+  {
+    "epoch": 7,
+    "volume": 10000,
+    "params": {
+      "baseRes": 8,
+      "maxLeavesPerBatch": 1024
+    },
+    "seed": 452054898,
+    "times": {
+      "nodes": 790,
+      "samples": 1165,
+      "epoch": 2476,
+      "bench": 1006
+    },
+    "nodesProcessed": 10000,
+    "samplesGenerated": 120000,
+    "error": null
+  },
+  {
+    "epoch": 8,
+    "volume": 10000,
+    "params": {
+      "baseRes": 8,
+      "maxLeavesPerBatch": 4096,
+      "maxSamplesPerBatch": 16000,
+      "hysteresisNear": 0.9,
+      "hysteresisFar": 1.1
+    },
+    "seed": 199636974,
+    "times": {
+      "nodes": 799,
+      "samples": 1098,
+      "epoch": 2386,
+      "bench": 1041
+    },
+    "nodesProcessed": 10000,
+    "samplesGenerated": 120000,
+    "error": null
+  },
+  {
+    "epoch": 9,
+    "volume": 10000,
+    "params": {
+      "baseRes": 8,
+      "maxLeavesPerBatch": 8192,
+      "maxSamplesPerBatch": 32000,
+      "hysteresisNear": 0.95,
+      "hysteresisFar": 1.05
+    },
+    "seed": 498747378,
+    "times": {
+      "nodes": 803,
+      "samples": 1104,
+      "epoch": 2427,
+      "bench": 1063
+    },
+    "nodesProcessed": 10000,
+    "samplesGenerated": 120000,
+    "error": null
+  },
+  {
+    "volume": 50000,
+    "generatedParamSets": [
+      {
+        "baseRes": 8,
+        "maxLeavesPerBatch": 1024
+      },
+      {
+        "baseRes": 8,
+        "maxLeavesPerBatch": 4096,
+        "maxSamplesPerBatch": 16000,
+        "hysteresisNear": 0.9,
+        "hysteresisFar": 1.1
+      },
+      {
+        "baseRes": 8,
+        "maxLeavesPerBatch": 8192,
+        "maxSamplesPerBatch": 32000,
+        "hysteresisNear": 0.95,
+        "hysteresisFar": 1.05
+      }
+    ]
+  },
+  {
+    "epoch": 10,
+    "volume": 50000,
+    "params": {
+      "baseRes": 8,
+      "maxLeavesPerBatch": 1024
+    },
+    "seed": 193349658,
+    "times": {
+      "nodes": 1601,
+      "samples": 3862,
+      "epoch": 9164,
+      "bench": 2059
+    },
+    "nodesProcessed": 50000,
+    "samplesGenerated": 600000,
+    "error": null
+  },
+  {
+    "epoch": 11,
+    "volume": 50000,
+    "params": {
+      "baseRes": 8,
+      "maxLeavesPerBatch": 4096,
+      "maxSamplesPerBatch": 16000,
+      "hysteresisNear": 0.9,
+      "hysteresisFar": 1.1
+    },
+    "seed": 275985960,
+    "times": {
+      "nodes": 1604,
+      "samples": 3344,
+      "epoch": 9316,
+      "bench": 2089
+    },
+    "nodesProcessed": 50000,
+    "samplesGenerated": 600000,
+    "error": null
+  },
+  {
+    "epoch": 12,
+    "volume": 50000,
+    "params": {
+      "baseRes": 8,
+      "maxLeavesPerBatch": 8192,
+      "maxSamplesPerBatch": 32000,
+      "hysteresisNear": 0.95,
+      "hysteresisFar": 1.05
+    },
+    "seed": 657767042,
+    "times": {
+      "nodes": 1633,
+      "samples": 3629,
+      "epoch": 9247,
+      "bench": 1939
+    },
+    "nodesProcessed": 50000,
+    "samplesGenerated": 600000,
+    "error": null
+  }
+]

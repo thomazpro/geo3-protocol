@@ -1,0 +1,13 @@
+# Environment files
+.env
+*/.env
+*/.env.local
+
+# Build and cache directories
+protocol/artifacts/
+protocol/cache/
+protocol/deployedAddresses.json
+hgc/data/
+
+# Node dependencies
+node_modules/

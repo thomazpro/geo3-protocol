@@ -1,0 +1,40 @@
+{
+  "name": "geo3-hgc",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "setup": "mkdir -p data reports",
+    "nodes": "node src/generators/nodes.js",
+    "samples": "node src/generators/samples.js",
+    "epoch": "node src/scripts/run-epoch.mjs --epoch=1",
+    "lint": "eslint .",
+    "test": "c8 vitest run --reporter=verbose",
+    "test:watch": "vitest",
+    "ci": "npm run lint && npm run test",
+    "prestart": "node -e \"import('./src/config/env.js')\""
+  },
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-promise": "^6.5.1",
+    "vitest": "^1.6.0",
+    "c8": "^9.1.0",
+    "supertest": "^6.3.4"
+  },
+  "dependencies": {
+    "axios": "^1.7.2",
+    "dayjs": "^1.11.11",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.11.1",
+    "form-data": "^4.0.0",
+    "h3-js": "^4.1.0",
+    "keccak256": "^1.0.6",
+    "merkletreejs": "^0.3.11",
+    "path": "^0.12.7",
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}
