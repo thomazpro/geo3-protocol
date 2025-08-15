@@ -15,7 +15,7 @@ O GEO3 é uma infraestrutura descentralizada para coletar, comprimir e registrar
 ## Relação com o GEO3
 Este repositório integra o simulador off-chain, a compressão HGC e os contratos inteligentes do protocolo, compondo um pipeline completo que liga sensores físicos ao registro on-chain do GEO3.
 
-Materiais oficiais e atualizações do projeto podem ser encontrados em [geo3.org](https://geo3.org).
+Materiais oficiais e atualizações do projeto podem ser encontrados em [geo3.live](https://geo3.live).
 
 ## Visão Geral
 O projeto coordena geração, compressão e ancoragem de leituras ambientais.
