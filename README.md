@@ -86,11 +86,6 @@ O repositório possui três arquivos de exemplo de variáveis de ambiente:
 - Após cada execução, registre estatísticas com `cd protocol && npm run bench -- <E>`; os dados são gravados em `reports/data/bench.json` e `bench.csv`.
 - Gere um relatório comparativo com `npm run report`, que consolida os benchmarks em `reports/REPORT.md`.
 
-### Analisando trade-offs
-- O cenário S2 (1000 nodes, 12 amostras) alcançou compressão de 4.80x ao custo de 5.35M gas.
-- O cenário S1 alcançou compressão de 4.00x com custo de 6.58M gas.
-- Aumentar o volume para 2000 nodes no cenário S6 elevou a compressão para 5.33x, mas o custo subiu para 9.47M gas, ilustrando o equilíbrio entre compressão hierárquica e gasto de gas.
-
 ## Modo mock de IPFS e chain
 O arquivo [.env.example](./.env.example) lista variáveis para integração com
 Pinata e com a rede Polygon. Se `PINATA_JWT` ou as credenciais da chain não
@@ -116,5 +111,5 @@ Relatórios resumidos estão disponíveis no diretório [`reports`](./reports):
 - [Desempenho dos Contratos](./reports/archives/contract-performance.md)
 
 ## Autoria e Licença
-Desenvolvido pela Aura Tecnologia, com autoria de Thomaz Valadares Gontijo.
+Desenvolvido pela Aura Tecnologia, com autoria de Thomaz Valadares Gontijo e colaboração de Eugênio Carvalho.
 Distribuído sob a licença [MIT](./LICENSE).
