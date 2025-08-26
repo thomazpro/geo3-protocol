@@ -16,7 +16,7 @@ export function isIpfsEnabled () {
   return Boolean(PINATA_JWT);
 }
 
-/** Envia arquivo individual para IPFS via Pinata ou modo mockado */
+/** Upload individual file to IPFS via Pinata or mocked mode */
 export async function uploadFile (localPath) {
   if (!isIpfsEnabled()) {
     const mockDir = path.resolve(__dirname, '../../data/ipfs-mock', String(Date.now()));
@@ -43,9 +43,10 @@ export async function uploadFile (localPath) {
 }
 
 /**
- * Calcula um hash determinístico para todos os arquivos de uma pasta.
- * O hash leva em conta tanto o conteúdo quanto o caminho relativo de cada arquivo.
- */
+* Calculates a deterministic hash for all files in a folder.
+* The hash takes into account both the content and the relative path of each file.
+*/
+
 export async function hashFolder (folderPath) {
   const fileHashes = [];
 
@@ -70,7 +71,7 @@ export async function hashFolder (folderPath) {
   return sha256Hex(fileHashes.join('|'));
 }
 
-/** Envia uma pasta completa para IPFS */
+/** Uploads a complete folder to IPFS */
 export async function uploadFolder (folderPath) {
   if (!isIpfsEnabled()) {
     const mockDir = path.resolve(__dirname, '../../data/ipfs-mock', String(Date.now()));
@@ -91,7 +92,7 @@ export async function uploadFolder (folderPath) {
         await walk(full, rel);
       } else if (entry.isFile()) {
         data.append('file', fs.createReadStream(full), {
-          filepath: path.posix.join('data', rel), // precisa manter estrutura relativa
+          filepath: path.posix.join('data', rel),
         });
       }
     }

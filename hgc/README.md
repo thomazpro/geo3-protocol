@@ -1,14 +1,13 @@
-# Simulador (hgc)
+# Simulator (hgc)
 
-Ferramentas off-chain que geram nodes, simulam leituras e executam o pipeline de compressão HGC.
+Off-chain tools that generate nodes, simulate readings, and execute the HGC compression pipeline.
 
-Scripts principais:
+Main scripts:
 
-- `npm run nodes -- --nodes=<N>` – gera nodes simulados (padrão: 10000)
-- `npm run samples -- --epoch=<E> --samples=<S>` – gera amostras do epoch (padrão: 12 por node)
-- `npm run epoch` – comprime e registra lotes
+- `npm run nodes -- --nodes=<N>` – generates simulated nodes (default: 10000)
+- `npm run samples -- --epoch=<E> --samples=<S>` – generates epoch samples (default: 12 per node)
+- `npm run epoch` – compresses and registers batches
 
-Os valores passados via `--nodes` e `--samples` são registrados em arquivos de metadados junto aos resultados gerados.
+The values passed via `--nodes` and `--samples` are recorded in metadata files along with the generated results.
 
-Documentação detalhada está em [docs/context.md](./docs/context.md).
-Instruções de deploy em [docs/deploy.md](./docs/deploy.md).
+Detailed documentation is available at [docs/context.md](./docs/context.md).

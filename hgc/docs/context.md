@@ -1,103 +1,77 @@
-# GEO3 – Contexto Técnico Completo (HGC + Oráculo + Stack On-chain)
+# GEO3 – Technical Context (HGC + Oracle + On-chain Stack)
 
-## 1. Resumo Executivo
+## 1. Overview
 
-O GEO3 é uma infraestrutura descentralizada para registro, compressão e publicação de dados ambientais na blockchain.  
-Seu núcleo é o **HGC (Hierarchical Geospatial Compression)**, um algoritmo autoral que organiza dados geoespaciais de forma hierárquica usando malha **H3**, permitindo compressão adaptativa, verificação cripto e auditabilidade pública.
+GEO3 is a decentralized infrastructure to collect, compress, and publish environmental data on the blockchain. Its core is the **HGC (Hierarchical Geospatial Compression)**, an algorithm that organizes geospatial readings into **H3** grid levels, generating deterministic batches with auditable Merkle roots.
 
-## 2. Arquitetura Geral
+## 2. Components
 
-### Componentes On-chain:
-- **GeoCellIDLib.sol** – Biblioteca de manipulação de IDs H3.
-- **GeoDataRegistry.sol** – Registro oficial de batches geoespaciais.
-- **GeoRewardManager.sol** – Distribuição de recompensas baseada em provas Merkle.
-- **GeoToken.sol** – Token ERC20 do ecossistema (CGT).
-- **NodeDIDRegistry.sol** – Identidade descentralizada de cada node.
+### On-chain
+- **GeoCellIDLib.sol** – utilities for manipulating H3 IDs.
+- **GeoDataRegistry.sol** – stores Merkle root and CID of each geospatial batch.
+- **GeoToken.sol** – ecosystem ERC20 token (CGT).
+- **NodeDIDRegistry.sol** – decentralized identity for nodes.
+- **GeoRewardManager.sol** – reward distribution contract (still under development).
 
-### Componentes Off-chain (Oráculo):
-- Simulação e coleta de dados (`nodes.js`, `samples.js`)
-- Compressão HGC (`hgc.js`)
-- Geração de Merkle roots (`hasher.js`)
-- Upload no IPFS (`ipfs.js`)
-- Publicação on-chain (`chain.js`, `epochJob.js`, `rewardJob.js`)
+### Off-chain (Oracle/Simulator)
+- `generators/nodes.js` – generates a list of simulated nodes with geolocation.
+- `generators/samples.js` – produces hourly samples for each node.
+- `utils/hgc.js` – implementation of the HGC algorithm and Merkle root calculation.
+- `utils/hasher.js` – deterministic hash and Merkle tree functions.
+- `utils/ipfs.js` – uploads results to IPFS (or mock folder when not configured).
+- `utils/chain.js` – registers batches in contracts or mock file.
+- `scripts/run-epoch.mjs` – orchestrates generation, compression, and registration of an epoch.
+- `pipelines/rewardJob.js` – stub for future reward distribution.
 
----
-
-## 3. Fluxo de Dados – Passo a Passo
+## 3. Data Pipeline
 
 ```ascii
-[Nodes Físicos / Simulados]
-         |
-         v
-[nodes.js] -> Geração de lista fixa de nodes com geolocalização
-         |
-[samples.js] -> Leituras horárias (pressão, temperatura, etc.)
-         |
-         v
-[hgc.js] -> Compressão HGC (res8 -> res0)
-         |
-         v
-[hasher.js] -> Geração de Merkle Root (dados determinísticos)
-         |
-         v
-[ipfs.js] -> Upload JSON comprimido no IPFS
-         |
-         v
-[chain.js] -> Registro on-chain (GeoDataRegistry)
-         |
-         +--> [GeoRewardManager] -> Distribuição de CGT via prova Merkle
+[nodes.js] --generate--> nodes.json
+        |
+[samples.js] --epoch--> samples.json
+        |
+[run-epoch.mjs] -> runHGC -> batches + cellToBatch map
+        |                     |
+        |                     +-> saveResults (data/epoch_X)
+        |                     |
+        +-> uploadFolder -> IPFS (optional)
+        +-> registerGeoBatch -> GeoDataRegistry (optional)
 ```
 
----
+- Typical execution is `npm run epoch -- --epoch=<N>`.
+- `run-epoch.mjs` ensures nodes exist, applies configured parameters (`src/config/hgc.js`), generates `N_SAMPLES` per node, runs `runHGC`, saves batches in `data/epoch_<N>` and, if configured, uploads to IPFS and registers in the contract.
+- `rewardJob.js` will be executed separately for reward calculation (not yet implemented).
 
-## 4. Explicação Técnica do HGC
+## 4. HGC Details
 
-O **HGC**:
-- Parte de uma resolução base fixa (H3 nível 8).
-- Faz **varredura top-down** agregando células em níveis superiores.
-- Usa **limites configuráveis** (`MAX_LEAVES_PER_BATCH`, `MAX_SAMPLES_PER_BATCH`) para definir quando agrupar ou manter granularidade.
-- Garante que **cada batch tenha Merkle root único**, determinístico e auditável.
-- Adota ordenação lexicográfica de células para consistência.
+1. Normalizes samples to the base resolution (`baseRes`, default 8) and removes duplicates by `(issuer,timestamp)`.
+2. Validates required fields and discards invalid samples.
+3. Counts samples per cell and orders H3 IDs lexicographically.
+4. Executes top‑down scan (`compressTopDown`) grouping neighboring cells according to limits:
+   - `MAX_LEAVES_PER_BATCH`
+   - `MAX_SAMPLES_PER_BATCH`
+   - hysteresis `hysteresisNear` / `hysteresisFar`
+5. For each group generates a **geoBatch** containing aggregated data, metadata (counts, timestamps, center, boundary), and Merkle root.
+6. At the end calculates a *super-root* of the epoch by combining the Merkle roots of all batches.
 
----
+Parameters are loaded from `src/config/hgc.js` and can be adjusted via environment variables or command line. The estimated node volume automatically adjusts `maxLeavesPerBatch`, `maxSamplesPerBatch`, and hysteresis thresholds.
 
-## 5. Exemplo Real de Compressão
+## 5. Main Files
 
-### Entrada (res8):
-```json
-[
-  {"cellId": "8828308299fffff", "avgTemp": 26.4, "pressure": 1013.2},
-  {"cellId": "8828308299bffff", "avgTemp": 26.5, "pressure": 1013.1}
-]
-```
+- `generators/nodes.js` – creates simulated nodes with ID and location.
+- `generators/samples.js` – generates sensor samples.
+- `utils/hgc.js` – runs compression and Merkle root.
+- `utils/hasher.js` – deterministic hashing and Merkle.
+- `utils/ipfs.js` – upload to IPFS or mock folder.
+- `utils/chain.js` – contract registration (or mock file).
+- `scripts/run-epoch.mjs` – complete pipeline for an epoch.
+- `pipelines/rewardJob.js` – placeholder for CGT distribution.
 
-### Saída (res7 após compressão):
-```json
-[
-  {"cellId": "872830829ffffff", "avgTemp": 26.45, "pressure": 1013.15}
-]
-```
+## 6. Deterministic Rules
 
----
+1. Always normalize IDs to `baseRes` before processing.
+2. Sort lists before building Merkle trees.
+3. `MAX_LEAVES_PER_BATCH = 4096` and `MAX_SAMPLES_PER_BATCH = 16000` for standard volume (doubles when `volume >= 5000`).
+4. Final files include fixed fields: `geoBatchId`, `epoch`, `data`, `countLeaves`, `countSamples`, `merkleRoot`, `hgcParams` and related metadata.
 
-## 6. Métricas de Compressão (Exemplo Simulado)
-
-| Dataset         | Antes (KB) | Depois (KB) | Compressão % | Gas Estimado (Polygon) |
-|-----------------|-----------:|------------:|-------------:|-----------------------:|
-| 1.000 leituras  | 120        | 35          | 70,8%        | 190.000                |
-| 10.000 leituras | 1.200      | 320         | 73,3%        | 1.900.000              |
-
----
-
-## 7. Função de Cada Arquivo
-
-- **nodes.js** – Gera nodes simulados com ID, localização e status.
-- **samples.js** – Gera amostras de sensores para cada node.
-- **hgc.js** – Executa o algoritmo HGC.
-- **hasher.js** – Cria hashes e Merkle roots.
-- **ipfs.js** – Faz upload para IPFS via Pinata.
-- **chain.js** – Chama funções de registro no contrato.
-- **epochJob.js** – Agendamento de publicação de batches.
-- **rewardJob.js** – Agendamento de distribuição de recompensas.
-
-**Este documento serve como base para qualquer evolução do repositório, garantindo preservação da lógica original e consistência técnica do GEO3.**
+**This document describes the current state of the HGC pipeline and serves as a foundation for its evolution.**

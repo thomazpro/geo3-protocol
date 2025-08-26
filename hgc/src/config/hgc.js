@@ -5,8 +5,8 @@ function parseArg (name, argv) {
   return arg ? arg.split('=')[1] : undefined
 }
 
-// heurística simples baseada no volume estimado de nodes
-// para ajustar limites de agregação e parâmetros de histerese
+// Simple heuristic based on estimated node volume
+// to adjust aggregation thresholds and hysteresis parameters
 export function paramsForVolume (volume = 0) {
   if (volume >= 5000) {
     return {

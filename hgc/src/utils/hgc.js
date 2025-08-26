@@ -39,10 +39,10 @@ function percentile(arr, p) {
  */
 export function runHGC(samples, epoch, params = HGC_DEFAULT_PARAMS, { onInvalid = 'throw' } = {}) {
   const { baseRes } = params
-  // 1. mapear leituras por geoCellId (folhas res8)
-  //    - normaliza ids para res8
-  //    - remove duplicados por (issuer,timestamp) ou hash do conteúdo
-  //    - valida valores
+  // 1. Map readings by geoCellId (res8 sheets)
+  // - Normalizes IDs to res8
+  // - Removes duplicates by (issuer, timestamp) or content hash
+  // - Validates values
   const tmpByCell = {}
   const invalidSamples = []
   for (const s of samples) {
@@ -101,15 +101,12 @@ export function runHGC(samples, epoch, params = HGC_DEFAULT_PARAMS, { onInvalid 
     ])
   )
 
-  // 2. compressão hierárquica adaptativa
   const compressed = compressTopDown(allCells, sampleCountByCell, undefined, false, params)
 
-  // 3. construir geoBatches + cellToBatchMap
   const batches = []
   const map     = {}
 
   for (const { res, cells } of compressed) {
-    // o pai é a célula em "res" que contém os filhos res8
     const parent = h3.cellToParent(cells[0], res)
 
     const sortedCells = [...cells].sort(cellIdComparator)
@@ -174,7 +171,6 @@ export function runHGC(samples, epoch, params = HGC_DEFAULT_PARAMS, { onInvalid 
   return { batches, map, superRoot, summary, invalidSamples, hgcParams: params }
 }
 
-/* adiciona merkleRoots in-place, se ainda não definidos */
 export function addMerkleRoots(batches) {
   for (const b of batches) {
     if (b.merkleRoot && b.leavesIndex) continue
@@ -184,7 +180,6 @@ export function addMerkleRoots(batches) {
   }
 }
 
-/* gera super-root do epoch a partir dos geoBatches */
 export function computeEpochSuperRoot(batches) {
   const sorted = [...batches].sort((a, b) => cellIdComparator(a.geoBatchId, b.geoBatchId))
   const batchIds = sorted.map(b => b.geoBatchId)
