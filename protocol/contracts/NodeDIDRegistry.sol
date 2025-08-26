@@ -5,7 +5,7 @@ pragma solidity 0.8.24;
 /*                               External Interface                           */
 /* -------------------------------------------------------------------------- */
 /// @title ISensorResolver
-/// @dev  Interface mínima para consultar o sensorType ⇒ maxResolution
+/// @dev  Minimal interface to query sensorType ⇒ maxResolution
 interface ISensorResolver {
     function sensorTypeMaxResolution(uint8 sensorType) external view returns (uint8);
 }
@@ -21,14 +21,14 @@ import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 /*                           GEO3 – NodeDIDRegistry                           */
 /* -------------------------------------------------------------------------- */
 /// @title NodeDIDRegistry
-/// @notice Registro de identidade descentralizada dos nodes físicos da rede GEO3.
-/// @dev    • Cada node é identificado por sua própria chave pública Ethereum (`nodeAddress`)
-///         • O endereço `controller` recebe recompensas e pode atualizar metadados.
-///         • A validação do tipo de node (nodeType) reutiliza a política definida no
-///           contrato GeoDataRegistry através do `ISensorResolver`.
+/// @notice Decentralized identity registry for GEO3 network physical nodes.
+/// @dev    • Each node is identified by its own Ethereum public key (`nodeAddress`)
+///         • The `controller` address receives rewards and can update metadata.
+///         • Validation of nodeType reuses the policy defined in the GeoDataRegistry
+///           contract through the `ISensorResolver`.
 contract NodeDIDRegistry is AccessControl, EIP712 {
     /* ───────────── ROLES ───────────── */
-    /// @notice Papel autorizado a gerenciar registros e operações de nodes
+    /// @notice Role authorized to manage node registrations and operations
     bytes32 public constant MANAGER_ROLE = keccak256("MANAGER_ROLE");
 
     /* ───────────── ERRORS ───────────── */
@@ -43,22 +43,22 @@ contract NodeDIDRegistry is AccessControl, EIP712 {
 
     /* ──────────── STRUCTS ──────────── */
     struct NodeData {
-        uint8  nodeType;     // corresponde 1-a-1 ao sensorType autorizado
-        bool   active;       // flag de operação
+        uint8  nodeType;     // corresponds 1-to-1 with authorized sensorType
+        bool   active;       // operational flag
         string metadataURI;  // DID-Document (IPFS/HTTPS)
     }
 
     /* ───────── STATE & STORAGE ─────── */
-    /// @notice nodeAddress ⇒ controller (beneficiário)
+    /// @notice nodeAddress ⇒ controller (beneficiary)
     mapping(address => address) public controllerOf;
 
-    /// @notice nodeAddress ⇒ NodeData imutável/frequência baixa de update
+    /// @notice nodeAddress ⇒ NodeData (low-frequency updates)
     mapping(address => NodeData) public nodeData;
 
-    /// @notice nodeAddress ⇒ nonce para EIP-712 (previne reutilização de assinatura)
+    /// @notice nodeAddress ⇒ nonce for EIP-712 (prevents signature replay)
     mapping(address => uint256) public nonces;
 
-    /// @notice Contrato que define quais sensorTypes estão habilitados e sua resolução máxima
+    /// @notice Contract defining which sensorTypes are enabled and their maximum resolution
     ISensorResolver public immutable sensorResolver;
 
     /* ───────────── EVENTS ───────────── */
@@ -119,13 +119,13 @@ contract NodeDIDRegistry is AccessControl, EIP712 {
         emit NodeRegistered(node, nodeType, controller);
     }
 
-    /// @notice Registra um novo node físico na rede GEO3
-    /// @dev Verifica assinatura EIP-712 e valida o tipo de node informado
-    /// @param node        Endereço (chave pública Ethereum) embutido no hardware
-    /// @param nodeType    Categoria do node (mapeada ao sensorType)
-    /// @param controller  Carteira que receberá recompensas e poderá gerenciar o node
-    /// @param metadataURI CID/URL do DID-Document contendo specs e credenciais
-    /// @param signature   Assinatura EIP-712 do node autorizando o registro
+    /// @notice Registers a new physical node in the GEO3 network
+    /// @dev Verifies EIP-712 signature and validates the informed node type
+    /// @param node        Address (Ethereum public key) embedded in hardware
+    /// @param nodeType    Node category (mapped to sensorType)
+    /// @param controller  Wallet that will receive rewards and manage the node
+    /// @param metadataURI CID/URL of the DID-Document containing specs and credentials
+    /// @param signature   EIP-712 signature from the node authorizing registration
     function registerNode(
         address node,
         uint8   nodeType,
@@ -136,13 +136,13 @@ contract NodeDIDRegistry is AccessControl, EIP712 {
         _registerNode(node, nodeType, controller, metadataURI, signature);
     }
 
-    /// @notice Registra múltiplos nodes em uma única transação
-    /// @dev Reaproveita as validações de `registerNode` para cada entrada
-    /// @param nodeAddresses  Lista dos endereços dos nodes a serem registrados
-    /// @param nodeTypes      Lista dos tipos de cada node, pareada por índice
-    /// @param controllers    Lista de controllers correspondentes a cada node
-    /// @param metadataURIs   Lista de URIs do DID-Document de cada node
-    /// @param signatures     Assinaturas EIP-712 dos respectivos nodes
+    /// @notice Registers multiple nodes in a single transaction
+    /// @dev Reuses the same validations as `registerNode` for each entry
+    /// @param nodeAddresses  List of node addresses to be registered
+    /// @param nodeTypes      List of node types, paired by index
+    /// @param controllers    List of controllers corresponding to each node
+    /// @param metadataURIs   List of DID-Document URIs for each node
+    /// @param signatures     EIP-712 signatures from the respective nodes
     function registerMultipleNodes(
         address[] calldata nodeAddresses,
         uint8[] calldata nodeTypes,
@@ -173,10 +173,10 @@ contract NodeDIDRegistry is AccessControl, EIP712 {
     /* -------------------------------------------------------------------------- */
     /*                             NODE MAINTENANCE                               */
     /* -------------------------------------------------------------------------- */
-    /// @notice Troca o controller associado a um node
-    /// @dev Pode ser chamada pelo controller atual ou por contas com MANAGER_ROLE
-    /// @param node          Endereço do node
-    /// @param newController Novo endereço de controller
+    /// @notice Changes the controller associated with a node
+    /// @dev Can be called by the current controller or accounts with MANAGER_ROLE
+    /// @param node          Node address
+    /// @param newController New controller address
     function changeController(address node, address newController) external {
         if (controllerOf[node] == address(0)) revert NodeNotRegistered();
         if (msg.sender != controllerOf[node] && !hasRole(MANAGER_ROLE, msg.sender)) revert Unauthorized();
@@ -186,10 +186,10 @@ contract NodeDIDRegistry is AccessControl, EIP712 {
         emit ControllerChanged(node, newController);
     }
 
-    /// @notice Atualiza o URI do documento DID do node
-    /// @dev Acesso restrito ao controller atual ou MANAGER_ROLE
-    /// @param node   Endereço do node
-    /// @param newURI Novo URI do documento DID
+    /// @notice Updates the DID document URI of the node
+    /// @dev Access restricted to current controller or MANAGER_ROLE
+    /// @param node   Node address
+    /// @param newURI New DID document URI
     function updateMetadataURI(address node, string calldata newURI) external {
         if (controllerOf[node] == address(0)) revert NodeNotRegistered();
         if (msg.sender != controllerOf[node] && !hasRole(MANAGER_ROLE, msg.sender)) revert Unauthorized();
@@ -197,10 +197,10 @@ contract NodeDIDRegistry is AccessControl, EIP712 {
         emit MetadataURIUpdated(node, newURI);
     }
 
-    /// @notice Ativa ou desativa um node
-    /// @dev Chamada somente por contas com MANAGER_ROLE
-    /// @param node   Endereço do node
-    /// @param active Novo estado de atividade
+    /// @notice Activates or deactivates a node
+    /// @dev Only callable by accounts with MANAGER_ROLE
+    /// @param node   Node address
+    /// @param active New active status
     function setNodeActive(address node, bool active) external onlyRole(MANAGER_ROLE) {
         if (controllerOf[node] == address(0)) revert NodeNotRegistered();
         nodeData[node].active = active;
@@ -210,19 +210,19 @@ contract NodeDIDRegistry is AccessControl, EIP712 {
     /* -------------------------------------------------------------------------- */
     /*                                    VIEWs                                   */
     /* -------------------------------------------------------------------------- */
-    /// @notice Retorna o controller associado a um node
-    /// @dev Função de consulta simples
-    /// @param node Endereço do node consultado
-    /// @return controller Endereço que controla o node
+    /// @notice Returns the controller associated with a node
+    /// @dev Simple query function
+    /// @param node Node address
+    /// @return controller Address that controls the node
     function getController(address node) external view returns (address controller) {
         return controllerOf[node];
     }
 
-    /// @notice Retorna controller e status de um node
-    /// @dev Combina duas consultas em uma única chamada
-    /// @param node Endereço do node consultado
-    /// @return controller Endereço que controla o node
-    /// @return active     Indicador de operação do node
+    /// @notice Returns controller and status of a node
+    /// @dev Combines two queries into a single call
+    /// @param node Node address
+    /// @return controller Address controlling the node
+    /// @return active     Node operational indicator
     function getControllerAndStatus(address node)
         external
         view
@@ -232,35 +232,35 @@ contract NodeDIDRegistry is AccessControl, EIP712 {
         active = nodeData[node].active;
     }
 
-    /// @notice Obtém os dados completos de um node, exceto o controller
-    /// @dev Retorna struct `NodeData` armazenada
-    /// @param node Endereço do node consultado
-    /// @return data Estrutura com tipo, status e metadataURI
+    /// @notice Retrieves full node data except the controller
+    /// @dev Returns the stored `NodeData` struct
+    /// @param node Node address
+    /// @return data Struct with type, status, and metadataURI
     function getNodeData(address node) external view returns (NodeData memory data) {
         return nodeData[node];
     }
 
-    /// @notice Indica se um determinado endereço já possui registro
-    /// @dev Útil para validações off-chain
-    /// @param node Endereço do node a ser consultado
-    /// @return registered Verdadeiro se o node já foi registrado
+    /// @notice Indicates if a given address is already registered
+    /// @dev Useful for off-chain validations
+    /// @param node Node address
+    /// @return registered True if the node is already registered
     function isRegistered(address node) external view returns (bool registered) {
         return controllerOf[node] != address(0);
     }
 
-    /// @notice Verifica se um usuário é controller de um node
-    /// @dev Utilizada por dApps para autorizações rápidas
-    /// @param node Endereço do node
-    /// @param user Endereço do possível controller
-    /// @return isCtrl Verdadeiro se `user` controla `node`
+    /// @notice Checks if a user is the controller of a node
+    /// @dev Used by dApps for quick authorization
+    /// @param node Node address
+    /// @param user Potential controller address
+    /// @return isCtrl True if `user` controls `node`
     function isController(address node, address user) external view returns (bool isCtrl) {
         return controllerOf[node] == user;
     }
 
-    /// @notice Informa se um node está ativo
-    /// @dev Consulta estado armazenado na struct `NodeData`
-    /// @param node Endereço do node
-    /// @return active Verdadeiro se o node estiver ativo
+    /// @notice Indicates whether a node is active
+    /// @dev Queries the state stored in the `NodeData` struct
+    /// @param node Node address
+    /// @return active True if the node is active
     function isActive(address node) external view returns (bool active) {
         return nodeData[node].active;
     }

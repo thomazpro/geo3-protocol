@@ -7,31 +7,30 @@ import {ERC20Capped}  from "@openzeppelin/contracts/token/ERC20/extensions/ERC20
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 
 /// @title GeoToken (CGT) - Carbon Guard Token
-/// @notice Token utilitário emitido com base em medições climáticas verificadas
-/// @dev Implementa ERC20, ERC20Permit e ERC20Capped com controle de acesso
+/// @notice Utility token issued based on verified climate measurements
+/// @dev Implements ERC20, ERC20Permit, and ERC20Capped with access control
 contract GeoToken is ERC20, ERC20Permit, ERC20Capped, AccessControl {
     /* ───────────── ROLES ───────────── */
-    /// @notice Papel autorizado a queimar tokens
+    /// @notice Role authorized to burn tokens
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
 
-    /// @notice Papel autorizado a cunhar tokens
+    /// @notice Role authorized to mint tokens
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
     /* ──────── STATE VARIABLES ──────── */
-    /// @notice Contrato responsável pela distribuição de recompensas
+    /// @notice Contract responsible for reward distribution
     address public rewardManager;
 
     /* ───────────── EVENTS ───────────── */
-    /// @notice Emitted quando o contrato de recompensas é atualizado
-    /// @param rewardManager Novo endereço do RewardManager
+    /// @notice Emitted when the reward manager contract is updated
+    /// @param rewardManager New RewardManager address
     event RewardManagerSet(address rewardManager);
 
-
     /* ────────── CONSTRUCTOR ────────── */
-    /// @notice Inicializa o token definindo administrador e limite máximo
-    /// @dev Concede ao admin os papéis DEFAULT_ADMIN e BURNER_ROLE
-    /// @param admin Address com papel DEFAULT_ADMIN
-    /// @param cap   Limite máximo de supply
+    /// @notice Initializes the token by setting the admin and maximum cap
+    /// @dev Grants the admin both DEFAULT_ADMIN and BURNER_ROLE
+    /// @param admin Address with DEFAULT_ADMIN_ROLE
+    /// @param cap   Maximum token supply cap
     constructor(address admin, uint256 cap)
         ERC20("Carbon Guard Token", "CGT")
         ERC20Permit("CGT")
@@ -41,11 +40,11 @@ contract GeoToken is ERC20, ERC20Permit, ERC20Capped, AccessControl {
         _grantRole(BURNER_ROLE, admin);
     }
 
-    /* ──────── FUNÇÃO DE MINT ──────── */
-    /// @notice Emite novos CGTs para um endereço
-    /// @dev Somente contas com MINTER_ROLE podem chamar
-    /// @param to     Beneficiário dos tokens
-    /// @param amount Quantidade a ser emitida
+    /* ──────── MINT FUNCTION ──────── */
+    /// @notice Mints new CGT tokens to an address
+    /// @dev Only accounts with MINTER_ROLE can call this function
+    /// @param to     Recipient of the tokens
+    /// @param amount Amount of tokens to mint
     function mint(address to, uint256 amount)
         external
         onlyRole(MINTER_ROLE)
@@ -53,26 +52,26 @@ contract GeoToken is ERC20, ERC20Permit, ERC20Capped, AccessControl {
         _mint(to, amount);
     }
 
-    /* ──────── FUNÇÃO DE BURN ──────── */
-    /// @notice Queima tokens de um endereço autorizado
-    /// @dev Restrito a contas com BURNER_ROLE
-    /// @param from   Endereço de origem dos tokens
-    /// @param amount Quantidade a ser queimada
+    /* ──────── BURN FUNCTION ──────── */
+    /// @notice Burns tokens from an authorized address
+    /// @dev Restricted to accounts with BURNER_ROLE
+    /// @param from   Address from which tokens will be burned
+    /// @param amount Amount of tokens to burn
     function burn(address from, uint256 amount) external onlyRole(BURNER_ROLE) {
         _burn(from, amount);
     }
 
     /* ──────── SET REWARD MANAGER ──────── */
-    /// @notice Define o contrato responsável por gerenciar recompensas
-    /// @dev Revoga o papel do gerente anterior e concede ao novo endereço
-    /// @param _rewardManager Novo endereço do RewardManager
+    /// @notice Sets the contract responsible for managing rewards
+    /// @dev Revokes the role from the previous reward manager (if any) and grants it to the new one
+    /// @param _rewardManager New RewardManager address
     function setRewardManager(address _rewardManager)
         external
         onlyRole(DEFAULT_ADMIN_ROLE)
     {
         require(_rewardManager != address(0), "reward manager zero");
 
-        // Revoga papel do antigo reward manager, se houver
+        // Revoke role from the old reward manager, if any
         if (rewardManager != address(0)) {
             _revokeRole(MINTER_ROLE, rewardManager);
         }
@@ -83,11 +82,11 @@ contract GeoToken is ERC20, ERC20Permit, ERC20Capped, AccessControl {
         emit RewardManagerSet(_rewardManager);
     }
 
-    /* ──────── OVERRIDES NECESSÁRIOS ──────── */
-    /// @dev Necessário devido ao múltiplo inheritance de ERC20 e ERC20Capped
-    /// @param from Remetente dos tokens
-    /// @param to   Destinatário dos tokens
-    /// @param value Quantidade transferida
+    /* ──────── REQUIRED OVERRIDES ──────── */
+    /// @dev Required due to multiple inheritance from ERC20 and ERC20Capped
+    /// @param from  Sender of the tokens
+    /// @param to    Recipient of the tokens
+    /// @param value Amount transferred
     function _update(address from, address to, uint256 value)
         internal
         override(ERC20, ERC20Capped)

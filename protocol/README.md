@@ -1,8 +1,9 @@
-# Contratos (protocol)
+# Contracts (protocol)
 
-Conjunto de contratos inteligentes do protocolo GEO3. Requisitos: Node.js ≥ 18, npm e Hardhat 2.25+.
+Set of smart contracts for the GEO3 protocol.  
+Requirements: Node.js ≥ 18, npm, and Hardhat 2.25+.
 
-Instale dependências com `npm install` e execute os testes com `npm test`.
-As variáveis de ambiente esperadas estão descritas em [.env.example](./.env.example).
+Install dependencies with `npm install` and run tests with `npm test`.  
+The expected environment variables are described in [.env.example](./.env.example).
 
-Para detalhes de arquitetura, contratos e fluxo de desenvolvimento consulte [docs/overview.md](./docs/overview.md).
+For details on architecture, contracts, and development flow see [docs/overview.md](./docs/overview.md).

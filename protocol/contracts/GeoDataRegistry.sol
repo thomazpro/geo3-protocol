@@ -7,16 +7,16 @@ import {MerkleProof}      from "@openzeppelin/contracts/utils/cryptography/Merkl
 import {GeoCellIDLib}     from "./GeoCellIDLib.sol";
 
 /// @title GeoDataRegistry
-/// @notice Registra lotes de dados geoespaciais e suas respectivas raízes Merkle
-/// @dev Controlado por papéis de oráculo e manager; utiliza GeoCellIDLib para validações
+/// @notice Registers geospatial data batches and their corresponding Merkle roots
+/// @dev Controlled by oracle and manager roles; uses GeoCellIDLib for validations
 contract GeoDataRegistry is AccessControlEnumerable, Pausable {
     using GeoCellIDLib for uint64;
 
     /* ───────────── ROLES ───────────── */
-    /// @notice Papel autorizado a registrar lotes de dados
+    /// @notice Role authorized to register data batches
     bytes32 public constant ORACLE_ROLE  = keccak256("ORACLE_ROLE");
 
-    /// @notice Papel autorizado a configurar parâmetros críticos
+    /// @notice Role authorized to configure critical parameters
     bytes32 public constant MANAGER_ROLE = keccak256("MANAGER_ROLE");
 
     /* ───────────── ERRORS ───────────── */
@@ -36,19 +36,19 @@ contract GeoDataRegistry is AccessControlEnumerable, Pausable {
     }
 
     /* ───────── STATE & STORAGE ─────── */
-    /// @notice Timestamp do início do epoch 0
+    /// @notice Timestamp marking the start of epoch 0
     uint256 public immutable genesisTimestamp;
 
-    /// @notice Intervalo mínimo entre epochs em segundos
+    /// @notice Minimum interval between epochs in seconds
     uint256 public epochMinInterval;
 
-    /// @notice Atraso máximo tolerado em epochs para registro
+    /// @notice Maximum tolerated delay in epochs for registration
     uint64 public epochMaxDelay;
 
-    /// @notice Metadados dos lotes por epoch e geoBatchId
+    /// @notice Metadata of batches by epoch and geoBatchId
     mapping(uint64 epoch => mapping(uint64 geoBatchId => GeoBatchMetadata)) public geoBatches;
 
-    /// @notice Resolução máxima permitida por sensorType (0 = não permitido)
+    /// @notice Maximum resolution allowed per sensorType (0 = not allowed)
     mapping(uint8 => uint8) public sensorTypeMaxResolution;
 
     /* ───────────── EVENTS ───────────── */
@@ -77,19 +77,19 @@ contract GeoDataRegistry is AccessControlEnumerable, Pausable {
         epochMaxDelay = _epochMaxDelay;
         emit EpochMaxDelaySet(_epochMaxDelay);
 
-        // habilita sensorType 0 com res-8 por default
+        // enables sensorType 0 with res-8 by default
         sensorTypeMaxResolution[0] = 8;
         emit SensorTypeSet(0, 8);
 
         genesisTimestamp = block.timestamp;
     }
 
-    /* ─────── REGISTRO ÚNICO ─────── */
-    /// @notice Registra um lote geoespacial individual para o epoch corrente
-    /// @dev Reverte se o lote já existir ou se merkleRoot/dataCID forem vazios
-    /// @param geoBatchId  Identificador do lote geoespacial
-    /// @param merkleRoot  Raiz Merkle dos dados
-    /// @param dataCID     CID ou URL que aponta para os dados off-chain
+    /* ─────── SINGLE REGISTRATION ─────── */
+    /// @notice Registers a single geospatial batch for the current epoch
+    /// @dev Reverts if the batch already exists or if merkleRoot/dataCID are empty
+    /// @param geoBatchId  Identifier of the geospatial batch
+    /// @param merkleRoot  Merkle root of the data
+    /// @param dataCID     CID or URL pointing to the off-chain data
     function registerGeoBatch(
         uint64  epoch,
         uint64  geoBatchId,
@@ -104,12 +104,12 @@ contract GeoDataRegistry is AccessControlEnumerable, Pausable {
         _register(epoch, geoBatchId, merkleRoot, dataCID);
     }
 
-    /* ─────── REGISTRO EM LOTE ─────── */
-    /// @notice Registra múltiplos lotes geoespaciais de uma só vez
-    /// @dev Cada posição dos arrays deve corresponder ao mesmo índice
-    /// @param geoBatchIds  Lista de identificadores dos lotes
-    /// @param merkleRoots  Lista das raízes Merkle correspondentes
-    /// @param dataCIDs     Lista de CIDs/URLs dos dados off-chain
+    /* ─────── BULK REGISTRATION ─────── */
+    /// @notice Registers multiple geospatial batches at once
+    /// @dev Each array position must correspond to the same index
+    /// @param geoBatchIds  List of batch identifiers
+    /// @param merkleRoots  List of corresponding Merkle roots
+    /// @param dataCIDs     List of CIDs/URLs of the off-chain data
     function registerGeoBatchBulk(
         uint64   epoch,
         uint64[] calldata geoBatchIds,
@@ -130,7 +130,7 @@ contract GeoDataRegistry is AccessControlEnumerable, Pausable {
         }
     }
 
-    /* ───────── REGISTRO INTERNO ────── */
+    /* ───────── INTERNAL REGISTRATION ────── */
     function _register(
         uint64  epoch,
         uint64  geoBatchId,
@@ -156,25 +156,25 @@ contract GeoDataRegistry is AccessControlEnumerable, Pausable {
         emit GeoBatchRegistered(epoch, geoBatchId, merkleRoot, dataCID, level);
     }
 
-    /* ───────────── VIEWs ───────────── */
-    /// @notice Retorna os metadados de um lote específico
-    /// @dev Consulta o mapeamento `geoBatches`
-    /// @param epoch      Epoch em que o lote foi registrado
-    /// @param geoBatchId Identificador do lote
-    /// @return metadata Estrutura com merkleRoot e dataCID
+    /* ───────────── VIEWS ───────────── */
+    /// @notice Returns the metadata of a specific batch
+    /// @dev Queries the `geoBatches` mapping
+    /// @param epoch      Epoch in which the batch was registered
+    /// @param geoBatchId Batch identifier
+    /// @return metadata Structure with merkleRoot and dataCID
     function getGeoBatch(uint64 epoch, uint64 geoBatchId)
         external view returns (GeoBatchMetadata memory metadata)
     {
         return geoBatches[epoch][geoBatchId];
     }
 
-    /// @notice Verifica se uma folha pertence a um lote específico
-    /// @dev Utiliza prova Merkle para verificar a inclusão
-    /// @param epoch      Epoch em que o lote foi registrado
-    /// @param geoBatchId Identificador do lote
-    /// @param leaf       Hash da folha a ser comprovada
-    /// @param proof      Caminho de prova Merkle
-    /// @return valid Verdadeiro se a folha pertencer ao lote
+    /// @notice Verifies if a leaf belongs to a specific batch
+    /// @dev Uses a Merkle proof to verify inclusion
+    /// @param epoch      Epoch in which the batch was registered
+    /// @param geoBatchId Batch identifier
+    /// @param leaf       Hash of the leaf to be proven
+    /// @param proof      Merkle proof path
+    /// @return valid True if the leaf belongs to the batch
     function verifyLeafInBatch(
         uint64  epoch,
         uint64  geoBatchId,
@@ -185,11 +185,11 @@ contract GeoDataRegistry is AccessControlEnumerable, Pausable {
         return root != bytes32(0) && MerkleProof.verifyCalldata(proof, root, leaf);
     }
 
-    /* ─────── CONFIGURAÇÕES ────────── */
-    /// @notice Configura a resolução máxima permitida para um sensorType
-    /// @dev Usa GeoCellIDLib para validar o nível informado
-    /// @param sensor  Identificador do sensor
-    /// @param maxRes  Resolução máxima permitida (0 desativa)
+    /* ─────── CONFIGURATIONS ────────── */
+    /// @notice Sets the maximum allowed resolution for a sensorType
+    /// @dev Uses GeoCellIDLib to validate the provided level
+    /// @param sensor  Sensor identifier
+    /// @param maxRes  Maximum allowed resolution (0 disables)
     function setSensorType(uint8 sensor, uint8 maxRes)
         external onlyRole(MANAGER_ROLE)
     {
@@ -198,25 +198,25 @@ contract GeoDataRegistry is AccessControlEnumerable, Pausable {
         emit SensorTypeSet(sensor, maxRes);
     }
 
-    /// @notice Adiciona um novo oráculo autorizado
-    /// @dev Concede ORACLE_ROLE ao endereço informado
-    /// @param oracle Endereço do oráculo
+    /// @notice Adds a new authorized oracle
+    /// @dev Grants ORACLE_ROLE to the given address
+    /// @param oracle Oracle address
     function addOracle(address oracle) external onlyRole(DEFAULT_ADMIN_ROLE) {
         _grantRole(ORACLE_ROLE, oracle);
         emit OracleAdded(oracle);
     }
 
-    /// @notice Remove um oráculo autorizado
-    /// @dev Revoga ORACLE_ROLE do endereço
-    /// @param oracle Endereço do oráculo
+    /// @notice Removes an authorized oracle
+    /// @dev Revokes ORACLE_ROLE from the address
+    /// @param oracle Oracle address
     function removeOracle(address oracle) external onlyRole(DEFAULT_ADMIN_ROLE) {
         _revokeRole(ORACLE_ROLE, oracle);
         emit OracleRemoved(oracle);
     }
 
-    /// @notice Ajusta o intervalo mínimo entre epochs
-    /// @dev Reverte se `newInterval` for zero
-    /// @param newInterval Novo intervalo em segundos
+    /// @notice Adjusts the minimum interval between epochs
+    /// @dev Reverts if `newInterval` is zero
+    /// @param newInterval New interval in seconds
     function setEpochMinInterval(uint256 newInterval)
         external onlyRole(MANAGER_ROLE)
     {
@@ -225,8 +225,8 @@ contract GeoDataRegistry is AccessControlEnumerable, Pausable {
         emit EpochMinIntervalSet(newInterval);
     }
 
-    /// @notice Ajusta o atraso máximo tolerado em epochs
-    /// @param newMaxDelay Novo atraso máximo
+    /// @notice Adjusts the maximum tolerated delay in epochs
+    /// @param newMaxDelay New maximum delay
     function setEpochMaxDelay(uint64 newMaxDelay)
         external onlyRole(MANAGER_ROLE)
     {
@@ -236,23 +236,23 @@ contract GeoDataRegistry is AccessControlEnumerable, Pausable {
 
 
     /* ─── Pausable ── */
-    /// @notice Pausa o registro de novos lotes
-    /// @dev Função do módulo Pausable
+    /// @notice Pauses the registration of new batches
+    /// @dev Function from the Pausable module
     function pause()   external onlyRole(MANAGER_ROLE) { _pause(); }
 
-    /// @notice Retoma o registro de lotes
-    /// @dev Função do módulo Pausable
+    /// @notice Resumes batch registration
+    /// @dev Function from the Pausable module
     function unpause() external onlyRole(MANAGER_ROLE) { _unpause(); }
 
     /* ─────── EPOCH ─────── */
-    /// @notice Calcula o epoch atual com base no timestamp
+    /// @notice Calculates the current epoch based on the timestamp
     function currentEpoch() public view returns (uint64) {
         unchecked {
             return uint64((block.timestamp - genesisTimestamp) / epochMinInterval);
         }
     }
 
-    /// @dev Valida se um epoch informado está dentro da janela permitida
+    /// @dev Validates whether a given epoch is within the allowed window
     function _validateEpoch(uint64 epoch) internal view {
         uint64 current = currentEpoch();
         if (epoch > current) revert EpochInFuture(epoch);

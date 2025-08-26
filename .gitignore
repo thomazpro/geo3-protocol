@@ -8,6 +8,8 @@ protocol/artifacts/
 protocol/cache/
 protocol/deployedAddresses.json
 hgc/data/
+hgc/node_modules
+hgc/.env
 
 # Node dependencies
 node_modules/

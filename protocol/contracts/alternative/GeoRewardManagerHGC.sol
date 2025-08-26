@@ -5,11 +5,15 @@ pragma solidity 0.8.24;
 /*                               External Interfaces                          */
 /* -------------------------------------------------------------------------- */
 
+/// @title IGeoToken
+/// @notice Minimal interface for minting and transferring CGT tokens
 interface IGeoToken {
     function mint(address to, uint256 amount) external;
     function transfer(address to, uint256 amount) external returns (bool);
 }
 
+/// @title INodeDIDRegistry
+/// @notice Interface for querying node controller and active status
 interface INodeDIDRegistry {
     function getControllerAndStatus(address node)
         external
@@ -28,15 +32,18 @@ import {BitMaps}         from "@openzeppelin/contracts/utils/structs/BitMaps.sol
 /*                    GEO3 – Hierarchical Reward Manager (HGC)                */
 /* -------------------------------------------------------------------------- */
 /// @title GeoRewardManagerHGC
-/// @notice Versão descentralizada por agrupamento HGC da distribuição de CGT.
-/// @dev    – Cada geoBatchId (célula compressa) possui sua própria Merkle root de recompensas
-///         – Oráculos regionais publicam batches independentemente
-///         – Controllers dos nodes reivindicam via proof regional
+/// @notice Decentralized HGC-based distribution of CGT rewards.
+/// @dev    – Each geoBatchId (compressed cell) has its own Merkle root of rewards  
+///         – Regional oracles publish batches independently  
+///         – Node controllers claim rewards via regional Merkle proofs
 contract GeoRewardManagerHGC is AccessControl {
     using BitMaps for BitMaps.BitMap;
 
     /* ───────────── ROLES ───────────── */
+    /// @notice Role authorized to publish reward batches
     bytes32 public constant ORACLE_ROLE  = keccak256("ORACLE_ROLE");
+
+    /// @notice Role authorized to update critical parameters
     bytes32 public constant MANAGER_ROLE = keccak256("MANAGER_ROLE");
 
     /* ───────────── ERRORS ───────────── */
@@ -47,22 +54,25 @@ contract GeoRewardManagerHGC is AccessControl {
     error NotController();
 
     /* ─────────── CONFIG CONSTANTS ─────────── */
+    /// @notice Reference to CGT token
     IGeoToken         public immutable cgt;
+
+    /// @notice Node registry used to validate controllers and node status
     INodeDIDRegistry  public immutable did;
 
     /* ---------------------------------------------------------------------- */
     /*                          Storage Structures                            */
     /* ---------------------------------------------------------------------- */
     struct RewardBatch {
-        bytes32 merkleRoot; // raiz Merkle dos rewards do agrupamento
-        uint256 totalMint;  // estatística
-        string  dataCID;    // opcional: IPFS com planilha completa
+        bytes32 merkleRoot; // Merkle root of the reward batch
+        uint256 totalMint;  // statistical info
+        string  dataCID;    // optional: IPFS link with complete dataset
     }
 
-    /// epochWeek ⇒ geoBatchId ⇒ RewardBatch
+    /// @notice Mapping of epochWeek ⇒ geoBatchId ⇒ RewardBatch
     mapping(uint64 => mapping(uint64 => RewardBatch)) public rewardBatches;
 
-    /// BitMap de claims: hash(epochWeek, geoBatchId, controller)
+    /// @notice Bitmap of claims: hash(epochWeek, geoBatchId, controller)
     BitMaps.BitMap private _claimed;
 
     /* ───────────── EVENTS ───────────── */
@@ -70,6 +80,10 @@ contract GeoRewardManagerHGC is AccessControl {
     event RewardClaimed(address indexed controller, uint64 indexed epochWeek, uint64 geoBatchId, uint256 amount);
 
     /* ────────── CONSTRUCTOR ────────── */
+    /// @param admin        Address with DEFAULT_ADMIN_ROLE
+    /// @param oracleGlobal Address authorized as global oracle
+    /// @param _cgt         Reference to CGT token contract
+    /// @param _did         Reference to NodeDIDRegistry
     constructor(
         address admin,
         address oracleGlobal,
@@ -84,9 +98,14 @@ contract GeoRewardManagerHGC is AccessControl {
     }
 
     /* -------------------------------------------------------------------------- */
-    /*                        PUBLICAÇÃO DE BATCH (ORACLE)                        */
+    /*                           BATCH PUBLICATION (ORACLE)                       */
     /* -------------------------------------------------------------------------- */
-    /// @notice Publica recompensa de um agrupamento regional (geoBatchId)
+    /// @notice Publishes a reward batch for a given regional aggregation (geoBatchId)
+    /// @param epochWeek   Weekly epoch identifier
+    /// @param geoBatchId  Regional batch identifier
+    /// @param merkleRoot  Merkle root of the reward distribution
+    /// @param totalToMint Total tokens to mint for this batch
+    /// @param dataCID     Optional off-chain data reference
     function publishRewardBatch(
         uint64  epochWeek,
         uint64  geoBatchId,
@@ -108,37 +127,46 @@ contract GeoRewardManagerHGC is AccessControl {
     }
 
     /* -------------------------------------------------------------------------- */
-    /*                                CLAIM REGION                               */
+    /*                               CLAIM REGION                                */
     /* -------------------------------------------------------------------------- */
-    /// @notice Controller reivindica recompensa de um node pertencente a um agrupamento
+    /// @notice Controller claims reward for a node belonging to a specific batch
+    /// @param epochWeek Weekly epoch identifier
+    /// @param geoBatchId Regional batch identifier
+    /// @param amount Expected reward amount
+    /// @param proof Merkle proof validating (node, amount) against the batch root
     function claim(
         uint64  epochWeek,
         uint64  geoBatchId,
         uint256 amount,
         bytes32[] calldata proof
     ) external {
-        // verifica node ativo e controller
+        // verify node is active and caller is controller
         (address controller, bool active) = did.getControllerAndStatus(msg.sender);
         if (!active) revert NodeInactive();
         if (controller != msg.sender) revert NotController();
 
-        // garante não-duplicação
+        // ensure no double claim
         uint256 bitIndex = _claimKey(epochWeek, geoBatchId, msg.sender);
         if (_claimed.get(bitIndex)) revert AlreadyClaimed();
 
-        // Merkle verify
+        // verify Merkle proof
         bytes32 leaf = keccak256(abi.encodePacked(msg.sender, amount));
         if (!MerkleProof.verify(proof, rewardBatches[epochWeek][geoBatchId].merkleRoot, leaf)) revert InvalidProof();
 
         _claimed.set(bitIndex);
         cgt.transfer(msg.sender, amount);
+
         emit RewardClaimed(msg.sender, epochWeek, geoBatchId, amount);
     }
 
     /* -------------------------------------------------------------------------- */
     /*                             INTERNAL HELPERS                               */
     /* -------------------------------------------------------------------------- */
-    /// @dev Gera um índice único para bitmap: hash(epoch, geoBatchId, controller) → uint256 mod 2^256
+    /// @dev Generates a unique index for the bitmap: hash(epochWeek, geoBatchId, controller)
+    /// @param epochWeek   Weekly epoch identifier
+    /// @param geoBatchId  Regional batch identifier
+    /// @param controller  Controller address
+    /// @return uint256 Unique claim index
     function _claimKey(uint64 epochWeek, uint64 geoBatchId, address controller) private pure returns (uint256) {
         return uint256(keccak256(abi.encodePacked(epochWeek, geoBatchId, controller)));
     }

@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.24;
 
-/// @title GeoCellIDLib – Biblioteca para manipulação de geo-identificadores (H3 + extensões)
-/// @notice Permite extrair, comparar, navegar e agrupar geoIds com extensão para compressão HGC.
-/// @dev Compatível com modelo GEO3 baseado em resolução H3 e cabeçalho binário estendido.
+/// @title GeoCellIDLib – Library for manipulating geoidentifiers (H3 + extensions)
+/// @notice Provides functionality to extract, compare, navigate, and group geoIDs with the HGC compression extension.
+/// @dev Compatible with the GEO3 model based on H3 resolution and extended binary header.
 
 library GeoCellIDLib {
     uint8 internal constant MAX_LEVEL = 15;
@@ -22,81 +22,81 @@ library GeoCellIDLib {
     error RootLevelHasNoParent();
 
     /* -------------------------------------------------------------------------- */
-    /*                           Extração de Componentes                          */
+    /*                           Component Extraction                             */
     /* -------------------------------------------------------------------------- */
 
-    /// @notice Extrai o nível de resolução do geoId
-    /// @dev Lê os bits 8–11 do identificador
-    /// @param geoId Identificador geoespacial codificado
-    /// @return level Nível de resolução (0-15)
+    /// @notice Extracts the resolution level of the geoId
+    /// @dev Reads bits 8–11 of the identifier
+    /// @param geoId Encoded geospatial identifier
+    /// @return level Resolution level (0–15)
     function extractLevel(uint64 geoId) internal pure returns (uint8 level) {
         return uint8((geoId >> LEVEL_OFFSET) & 0xF); // bits 8–11
     }
 
-    /// @notice Obtém a célula base H3 do geoId
-    /// @dev Lê os bits 12–18 do identificador
-    /// @param geoId Identificador geoespacial codificado
-    /// @return baseCell Índice da célula base
+    /// @notice Gets the H3 base cell from the geoId
+    /// @dev Reads bits 12–18 of the identifier
+    /// @param geoId Encoded geospatial identifier
+    /// @return baseCell Base cell index
     function extractBaseCell(uint64 geoId) internal pure returns (uint8 baseCell) {
         return uint8((geoId >> BASE_CELL_OFFSET) & 0x7F); // bits 12–18
     }
 
-    /// @notice Lê o dígito de resolução sem validação de faixa
-    /// @dev Função auxiliar usada internamente
-    /// @param geoId Identificador geoespacial
-    /// @param digit Posição do dígito (1-15)
-    /// @return value Valor do dígito
+    /// @notice Reads the resolution digit without range validation
+    /// @dev Auxiliary function used internally
+    /// @param geoId Geospatial identifier
+    /// @param digit Digit position (1–15)
+    /// @return value Digit value
     function _resolutionDigit(uint64 geoId, uint8 digit) private pure returns (uint8 value) {
         return uint8((geoId >> (DIGIT_OFFSET + (digit - 1) * 3)) & 0x7);
     }
 
-    /// @notice Extrai um dígito de resolução específico
-    /// @dev Valida o intervalo do dígito antes da leitura
-    /// @param geoId Identificador geoespacial
-    /// @param digit Posição do dígito (1-15)
-    /// @return value Valor do dígito
+    /// @notice Extracts a specific resolution digit
+    /// @dev Validates digit range before reading
+    /// @param geoId Geospatial identifier
+    /// @param digit Digit position (1–15)
+    /// @return value Digit value
     function extractResolutionDigit(uint64 geoId, uint8 digit) internal pure returns (uint8 value) {
         if (digit < 1 || digit > MAX_LEVEL) revert InvalidDigit();
         return _resolutionDigit(geoId, digit);
     }
 
-    /// @notice Extrai o cabeçalho (sensorType) do geoId
-    /// @dev Lê os bits 56–63 do identificador
-    /// @param geoId Identificador geoespacial codificado
-    /// @return header Valor do cabeçalho
+    /// @notice Extracts the header (sensorType) from the geoId
+    /// @dev Reads bits 56–63 of the identifier
+    /// @param geoId Encoded geospatial identifier
+    /// @return header Header value
     function extractHeader(uint64 geoId) internal pure returns (uint8 header) {
         return uint8(geoId >> 56); // bits 56–63
     }
 
     /* -------------------------------------------------------------------------- */
-    /*                            Modificadores Diretos                            */
+    /*                            Direct Modifiers                                */
     /* -------------------------------------------------------------------------- */
 
-    /// @notice Define o cabeçalho de um geoId
-    /// @dev Substitui os bits superiores pelo novo valor
-    /// @param geoId  Identificador geoespacial original
-    /// @param header Novo valor de cabeçalho
-    /// @return newGeoId GeoId com cabeçalho atualizado
+    /// @notice Sets the header of a geoId
+    /// @dev Replaces the upper bits with the new value
+    /// @param geoId  Original geospatial identifier
+    /// @param header New header value
+    /// @return newGeoId GeoId with updated header
     function setHeader(uint64 geoId, uint8 header) internal pure returns (uint64 newGeoId) {
         return (uint64(header) << 56) | (geoId & BODY_MASK);
     }
 
-    /// @notice Remove o cabeçalho de um geoId
-    /// @dev Zera os bits 56–63
-    /// @param geoId Identificador geoespacial com cabeçalho
-    /// @return bareGeoId GeoId sem cabeçalho
+    /// @notice Removes the header from a geoId
+    /// @dev Zeros bits 56–63
+    /// @param geoId Geospatial identifier with header
+    /// @return bareGeoId GeoId without header
     function clearHeader(uint64 geoId) internal pure returns (uint64 bareGeoId) {
         return geoId & BODY_MASK;
     }
 
     /* -------------------------------------------------------------------------- */
-    /*                        Operações Hierárquicas e Lógicas                    */
+    /*                        Hierarchical and Logical Operations                 */
     /* -------------------------------------------------------------------------- */
 
-    /// @notice Obtém o identificador do pai imediato de uma célula
-    /// @dev Regride o nível de resolução em uma unidade
-    /// @param geoId Identificador da célula filha
-    /// @return parentId Identificador da célula pai
+    /// @notice Gets the immediate parent identifier of a cell
+    /// @dev Decreases the resolution level by one
+    /// @param geoId Child cell identifier
+    /// @return parentId Parent cell identifier
     function parentOf(uint64 geoId) internal pure returns (uint64 parentId) {
         uint8 level = extractLevel(geoId);
         if (level == 0) revert RootLevelHasNoParent();
@@ -108,11 +108,11 @@ library GeoCellIDLib {
         }
     }
 
-    /// @notice Agrega um geoId a um nível ancestral específico
-    /// @dev Navega até o pai correspondente ao `targetLevel`
-    /// @param geoId       Identificador de origem
-    /// @param targetLevel Nível alvo para agregação
-    /// @return rootId Identificador agregado
+    /// @notice Aggregates a geoId to a specific ancestor level
+    /// @dev Navigates to the parent corresponding to `targetLevel`
+    /// @param geoId       Source identifier
+    /// @param targetLevel Target aggregation level
+    /// @return rootId Aggregated identifier
     function aggregationGroup(uint64 geoId, uint8 targetLevel) internal pure returns (uint64 rootId) {
         uint8 level = extractLevel(geoId);
         if (level < targetLevel) revert InvalidAggregationTarget();
@@ -124,14 +124,14 @@ library GeoCellIDLib {
     }
 
     /* -------------------------------------------------------------------------- */
-    /*                      Relações de Parentesco e Agrupamento                  */
+    /*                      Kinship and Grouping Relations                        */
     /* -------------------------------------------------------------------------- */
 
-    /// @notice Verifica se uma célula é ancestral de outra
-    /// @dev Compara dígitos de resolução em cada nível
-    /// @param ancestor   Possível ancestral
-    /// @param descendant Possível descendente
-    /// @return isAncestor Verdadeiro se `ancestor` for ancestral de `descendant`
+    /// @notice Checks if one cell is ancestor of another
+    /// @dev Compares resolution digits at each level
+    /// @param ancestor   Potential ancestor
+    /// @param descendant Potential descendant
+    /// @return isAncestor True if `ancestor` is an ancestor of `descendant`
     function isAncestorOf(uint64 ancestor, uint64 descendant) internal pure returns (bool isAncestor) {
         uint8 ancLevel = extractLevel(ancestor);
         uint8 descLevel = extractLevel(descendant);
@@ -147,11 +147,11 @@ library GeoCellIDLib {
         return true;
     }
 
-    /// @notice Indica se duas células compartilham o mesmo pai
-    /// @dev Compara todos os dígitos exceto o último
-    /// @param a Primeira célula
-    /// @param b Segunda célula
-    /// @return siblings Verdadeiro se forem irmãs
+    /// @notice Checks if two cells share the same parent
+    /// @dev Compares all digits except the last
+    /// @param a First cell
+    /// @param b Second cell
+    /// @return siblings True if they are siblings
     function isSiblingOf(uint64 a, uint64 b) internal pure returns (bool siblings) {
         uint8 levelA = extractLevel(a);
         if (levelA != extractLevel(b)) return false;
@@ -165,12 +165,12 @@ library GeoCellIDLib {
         return _resolutionDigit(a, levelA) != _resolutionDigit(b, levelA);
     }
 
-    /// @notice Verifica se duas células compartilham a mesma raiz até certo nível
-    /// @dev Percorre dígitos de resolução até o `targetLevel`
-    /// @param a           Primeira célula
-    /// @param b           Segunda célula
-    /// @param targetLevel Nível alvo de comparação
-    /// @return sameRoot Verdadeiro se ambas tiverem a mesma raiz
+    /// @notice Checks if two cells share the same root up to a given level
+    /// @dev Iterates resolution digits up to `targetLevel`
+    /// @param a           First cell
+    /// @param b           Second cell
+    /// @param targetLevel Target level for comparison
+    /// @return sameRoot True if both share the same root
     function isSameRoot(uint64 a, uint64 b, uint8 targetLevel) internal pure returns (bool sameRoot) {
         if (extractLevel(a) < targetLevel || extractLevel(b) < targetLevel) return false;
         if (extractBaseCell(a) != extractBaseCell(b)) return false;
@@ -183,39 +183,39 @@ library GeoCellIDLib {
     }
 
     /* -------------------------------------------------------------------------- */
-    /*                         Validações e Extrações Diversas                    */
+    /*                         Miscellaneous Validations and Extractions          */
     /* -------------------------------------------------------------------------- */
 
-    /// @notice Verifica se um nível é válido dentro da faixa suportada
-    /// @dev Limite superior definido por `MAX_LEVEL`
-    /// @param level Nível de resolução
-    /// @return valid Verdadeiro se o nível for suportado
+    /// @notice Checks if a level is valid within the supported range
+    /// @dev Upper limit defined by `MAX_LEVEL`
+    /// @param level Resolution level
+    /// @return valid True if the level is supported
     function isValidLevel(uint8 level) internal pure returns (bool valid) {
         return level <= MAX_LEVEL;
     }
 
-    /// @notice Compara partes de cabeçalho com máscara e valor
-    /// @dev Operação bitwise para filtragem rápida
-    /// @param geoId Identificador geoespacial
-    /// @param mask  Máscara de bits a ser aplicada
-    /// @param value Valor esperado após a máscara
-    /// @return matches Verdadeiro se corresponder
+    /// @notice Compares header parts with mask and value
+    /// @dev Bitwise operation for fast filtering
+    /// @param geoId Geospatial identifier
+    /// @param mask  Bit mask to be applied
+    /// @param value Expected value after mask
+    /// @return matches True if it matches
     function matchesHeader(uint64 geoId, uint64 mask, uint64 value) internal pure returns (bool matches) {
         return (geoId & mask) == value;
     }
 
-    /// @notice Extrai a parte de célula de um identificador 128 bits
-    /// @dev Retorna os 64 bits menos significativos
-    /// @param geo128 Identificador estendido
-    /// @return geoCell Parte de 64 bits correspondente ao geoId
+    /// @notice Extracts the cell part of a 128-bit identifier
+    /// @dev Returns the least significant 64 bits
+    /// @param geo128 Extended identifier
+    /// @return geoCell 64-bit part corresponding to geoId
     function extractGeoCellPart(uint128 geo128) internal pure returns (uint64 geoCell) {
         return uint64(geo128);
     }
 
-    /// @notice Extrai a parte de metadados de um identificador 128 bits
-    /// @dev Retorna os 64 bits superiores
-    /// @param geo128 Identificador estendido
-    /// @return meta Parte de 64 bits destinada a metadados
+    /// @notice Extracts the metadata part of a 128-bit identifier
+    /// @dev Returns the most significant 64 bits
+    /// @param geo128 Extended identifier
+    /// @return meta 64-bit part for metadata
     function extractMetaPart(uint128 geo128) internal pure returns (uint64 meta) {
         return uint64(geo128 >> 64);
     }
